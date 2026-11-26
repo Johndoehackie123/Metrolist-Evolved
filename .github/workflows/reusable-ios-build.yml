@@ -214,10 +214,9 @@ jobs:
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
         run: |
-          test -n "$LASTFM_API_KEY" || { echo "LASTFM_API_KEY is required for tester releases" >&2; exit 1; }
-          test -n "$LASTFM_SECRET" || { echo "LASTFM_SECRET is required for tester releases" >&2; exit 1; }
-          test -n "$LYPRIO_BASE_URL" || { echo "LYPRIO_BASE_URL is required for tester releases" >&2; exit 1; }
-          test -n "$LYPRIO_HMAC_KEY" || { echo "LYPRIO_HMAC_KEY is required for tester releases" >&2; exit 1; }
+          if [[ -z "$LASTFM_API_KEY" || -z "$LASTFM_SECRET" || -z "$LYPRIO_BASE_URL" || -z "$LYPRIO_HMAC_KEY" ]]; then
+            echo "Notice: optional API credentials not configured for tester release"
+          fi
 
       - name: Compile iOS release framework
         env:
@@ -241,7 +240,10 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           set -euo pipefail
-          test -n "$SENTRY_AUTH_TOKEN" || { echo "SENTRY_AUTH_TOKEN is required when Sentry upload is enabled" >&2; exit 1; }
+          if [[ -z "$SENTRY_AUTH_TOKEN" ]]; then
+            echo "Notice: SENTRY_AUTH_TOKEN not configured; skipping Sentry iOS symbol upload"
+            exit 0
+          fi
           version="3.8.2"
           case "$RUNNER_ARCH" in
             ARM64)

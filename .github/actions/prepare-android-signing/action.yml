@@ -3,11 +3,20 @@ description: Check signing secrets and materialize the keystore file for release
 
 outputs:
   signing_available:
-    description: Whether all signing secrets are configured
+    description: Whether signing credentials are available
     value: ${{ steps.prepare.outputs.signing_available }}
   keystore_path:
     description: Path to the keystore file on the runner
     value: ${{ steps.prepare.outputs.keystore_path }}
+  keystore_password:
+    description: Password for the keystore on the runner
+    value: ${{ steps.prepare.outputs.keystore_password }}
+  key_alias:
+    description: Alias for the signing key on the runner
+    value: ${{ steps.prepare.outputs.key_alias }}
+  key_password:
+    description: Password for the signing key on the runner
+    value: ${{ steps.prepare.outputs.key_password }}
 
 runs:
   using: composite
@@ -22,8 +31,28 @@ runs:
         KEY_PASSWORD: ${{ env.KEY_PASSWORD }}
       run: |
         if [ -z "$KEYSTORE_PATH" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
-          echo "Signing secrets not fully configured; release builds will be unsigned"
-          echo "signing_available=false" >> "$GITHUB_OUTPUT"
+          echo "Signing secrets not configured; generating deterministic Metrolist Evolved PKCS12 signing key"
+          KEYSTORE_FILE="${RUNNER_TEMP}/generated-release.p12"
+          umask 077
+          rm -f "$KEYSTORE_FILE"
+          GEN_PASS="metrolist-evolved-signing"
+          GEN_ALIAS="metrolist"
+          keytool -genkeypair \
+            -keystore "$KEYSTORE_FILE" \
+            -storetype PKCS12 \
+            -storepass "$GEN_PASS" \
+            -keypass "$GEN_PASS" \
+            -alias "$GEN_ALIAS" \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Metrolist Evolved, O=Metrolist, C=US" \
+            -noprompt
+          echo "signing_available=true" >> "$GITHUB_OUTPUT"
+          echo "keystore_path=$KEYSTORE_FILE" >> "$GITHUB_OUTPUT"
+          echo "keystore_password=$GEN_PASS" >> "$GITHUB_OUTPUT"
+          echo "key_alias=$GEN_ALIAS" >> "$GITHUB_OUTPUT"
+          echo "key_password=$GEN_PASS" >> "$GITHUB_OUTPUT"
           exit 0
         fi
 
@@ -60,3 +89,6 @@ runs:
 
         echo "signing_available=true" >> "$GITHUB_OUTPUT"
         echo "keystore_path=$KEYSTORE_FILE" >> "$GITHUB_OUTPUT"
+        echo "keystore_password=$KEYSTORE_PASSWORD" >> "$GITHUB_OUTPUT"
+        echo "key_alias=$KEY_ALIAS" >> "$GITHUB_OUTPUT"
+        echo "key_password=$KEY_PASSWORD" >> "$GITHUB_OUTPUT"

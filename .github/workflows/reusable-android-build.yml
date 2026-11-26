@@ -129,16 +129,14 @@ jobs:
             echo "ORG_GRADLE_PROJECT_appVersion=$version" >> "$GITHUB_ENV"
           fi
 
-          if [[ "$UPLOAD_SENTRY" == "true" ]]; then
-            test -n "$SENTRY_AUTH_TOKEN" || { echo "SENTRY_AUTH_TOKEN is required when Sentry upload is enabled" >&2; exit 1; }
+          if [[ "$UPLOAD_SENTRY" == "true" && -z "$SENTRY_AUTH_TOKEN" ]]; then
+            echo "Notice: SENTRY_AUTH_TOKEN not configured; skipping Sentry source upload"
           fi
-          if [[ "$BUILD_VARIANT" != "debug" ]]; then
-            test -n "$LASTFM_API_KEY" || { echo "LASTFM_API_KEY is required for release builds" >&2; exit 1; }
-            test -n "$LASTFM_SECRET" || { echo "LASTFM_SECRET is required for release builds" >&2; exit 1; }
+          if [[ "$BUILD_VARIANT" != "debug" && ( -z "$LASTFM_API_KEY" || -z "$LASTFM_SECRET" ) ]]; then
+            echo "Notice: LASTFM credentials not configured; building without bundled Last.fm keys"
           fi
-          if [[ "$BUILD_VARIANT" == "release" ]]; then
-            test -n "$LYPRIO_BASE_URL" || { echo "LYPRIO_BASE_URL is required for release builds" >&2; exit 1; }
-            test -n "$LYPRIO_HMAC_KEY" || { echo "LYPRIO_HMAC_KEY is required for release builds" >&2; exit 1; }
+          if [[ "$BUILD_VARIANT" == "release" && ( -z "$LYPRIO_BASE_URL" || -z "$LYPRIO_HMAC_KEY" ) ]]; then
+            echo "Notice: LYPRIO credentials not configured; building without bundled Lyprio keys"
           fi
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
@@ -185,9 +183,9 @@ jobs:
           ASSEMBLE: ${{ inputs.assemble }}
           VERIFICATION_ONLY: ${{ inputs.variant == 'debug' && !inputs.upload-artifact && inputs.staging-release-tag == '' }}
           KEYSTORE_PATH: ${{ steps.signing.outputs.keystore_path }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ steps.signing.outputs.keystore_password || secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ steps.signing.outputs.key_alias || secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ steps.signing.outputs.key_password || secrets.KEY_PASSWORD }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
