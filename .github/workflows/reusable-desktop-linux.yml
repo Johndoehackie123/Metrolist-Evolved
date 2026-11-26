@@ -109,7 +109,8 @@ jobs:
           set -euo pipefail
           log="$RUNNER_TEMP/build-linux.log"
           if ! ./scripts/build_appimage.sh -Pmetrolist.verifyPackaging=${{ inputs.run-verification }} > >(tee "$log") 2> >(tee -a "$log" >&2); then
-            echo "::error title=Linux AppImage build failed::$(tail -n 60 "$log" | tr '\n' ' ' | head -c 3500)"
+            summary="$(grep -E '^(FAILURE:|> Task .* FAILED|\* What went wrong:|  > |Warning:|Exception|Caused by:)' "$log" | tail -n 30 | tr '\n' ' ' | head -c 1800 || true)"
+            echo "::error title=Linux AppImage build failed::${summary} || TAIL: $(tail -n 25 "$log" | tr '\n' ' ' | head -c 1600)"
             exit 1
           fi
 

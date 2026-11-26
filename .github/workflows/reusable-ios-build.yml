@@ -164,7 +164,7 @@ jobs:
       LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
       LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
       GRADLE_OPTS: >-
-        -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=60.0 -XX:+UseParallelGC -Dkotlin.daemon.jvm.options=-XX:MaxRAMPercentage=60.0"
+        -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=85.0 -XX:MaxMetaspaceSize=1g -XX:+UseParallelGC -Dkotlin.daemon.jvm.options=-XX:MaxRAMPercentage=85.0"
       ORG_GRADLE_PROJECT_org.gradle.workers.max: "2"
     steps:
       - name: Check out repository
