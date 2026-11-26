@@ -202,6 +202,7 @@ jobs:
 
   macos:
     name: macOS
+    if: github.repository_owner == 'MetrolistGroup'
     needs: prepare
     uses: ./.github/workflows/reusable-desktop-macos.yml
     permissions:
@@ -222,6 +223,7 @@ jobs:
 
   ios:
     name: iOS
+    if: github.repository_owner == 'MetrolistGroup'
     needs: prepare
     uses: ./.github/workflows/reusable-ios-build.yml
     permissions:
@@ -253,6 +255,18 @@ jobs:
 
   publish:
     name: Publish stable release
+    if: >-
+      always() &&
+      needs.prepare.result == 'success' &&
+      needs.android.result == 'success' &&
+      needs.android-izzy.result == 'success' &&
+      needs.windows-native.result == 'success' &&
+      needs.windows.result == 'success' &&
+      needs.windows-manager.result == 'success' &&
+      needs.linux-native.result == 'success' &&
+      needs.linux.result == 'success' &&
+      (needs.macos.result == 'success' || needs.macos.result == 'skipped') &&
+      (needs.ios.result == 'success' || needs.ios.result == 'skipped')
     needs:
       - prepare
       - android
@@ -313,16 +327,20 @@ jobs:
             "release-assets/Metrolist-with-Google-Cast.apk"
             "release-assets/Metrolist-izzy.apk"
             "release-assets/Metrolist-KMP-mapping.txt"
-            "release-assets/Metrolist.ipa"
-            "release-assets/metrolist-altstore.json"
             "release-assets/Metrolist-Desktop-windows.zip"
             "release-assets/metrolist-installer-windows-x64-${APP_VERSION}.exe"
             "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
             "release-assets/metrolist-desktop-linux-x64-${APP_VERSION}.AppImage"
             "release-assets/metrolist-desktop-linux-arm64-${APP_VERSION}.AppImage"
-            "release-assets/metrolist-desktop-macos-arm64-${APP_VERSION}.dmg"
-            "release-assets/metrolist-desktop-macos-x64-${APP_VERSION}.dmg"
           )
+          if [[ "$GITHUB_REPOSITORY" == "MetrolistGroup/Metrolist" ]]; then
+            expected+=(
+              "release-assets/Metrolist.ipa"
+              "release-assets/metrolist-altstore.json"
+              "release-assets/metrolist-desktop-macos-arm64-${APP_VERSION}.dmg"
+              "release-assets/metrolist-desktop-macos-x64-${APP_VERSION}.dmg"
+            )
+          fi
           for file in "${expected[@]}"; do
             test -f "$file" || { echo "Missing release asset: $file" >&2; exit 1; }
           done
@@ -574,6 +592,7 @@ jobs:
 
   finalize-sentry:
     name: Finalize Sentry releases
+    if: always() && needs.prepare.result == 'success' && needs.publish.result == 'success'
     needs:
       - prepare
       - publish
