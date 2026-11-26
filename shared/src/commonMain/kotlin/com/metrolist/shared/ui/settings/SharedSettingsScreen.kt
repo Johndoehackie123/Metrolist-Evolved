@@ -18,7 +18,9 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -105,6 +107,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
+import com.metrolist.shared.BuildConfig
 import com.metrolist.shared.generated.resources.*
 import com.metrolist.shared.ui.LocalIsTv
 import com.metrolist.shared.ui.components.ExpressiveSwitch
@@ -124,6 +127,7 @@ import com.metrolist.shared.ui.utils.desktopArrowScroll
 import com.metrolist.shared.ui.utils.segmentedGroupShape
 import com.metrolist.shared.utils.isPullToRefreshSupported
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
@@ -617,6 +621,16 @@ private fun SettingsHomeList(
             )
         }
         if (query.isBlank()) {
+            item("app_banner") {
+                SettingsAppOverviewCard(
+                    onClick = {
+                        if (registry[SettingsPageId.ABOUT] != null) {
+                            onPageSelected(SettingsPageId.ABOUT)
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
             registry.rootGroups.filter { it.pages.isNotEmpty() }.forEach { group ->
                 item(group.title) {
                     SettingsRootGroup(group, registry, customPageIcons, onPageSelected)
@@ -954,6 +968,78 @@ private fun SettingsPullToRefreshPageList(
 }
 
 @Composable
+private fun SettingsAppOverviewCard(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val containerColor by animateColorAsState(
+        if (pressed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+        label = "settingsAppOverviewCard",
+    )
+    Surface(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(24.dp))
+                .clickable(interactionSource = interactionSource, indication = ripple(), onClick = onClick),
+        shape = RoundedCornerShape(24.dp),
+        color = containerColor,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.size(48.dp),
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(Res.drawable.logo),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(28.dp),
+                    )
+                }
+            }
+            Spacer(Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = stringResource(Res.string.settings_about_overview),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Spacer(Modifier.width(12.dp))
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = MaterialTheme.colorScheme.secondaryContainer,
+            ) {
+                Text(
+                    text = "v${BuildConfig.APP_VERSION}",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun SettingsRootGroup(
     group: SettingsRootGroupRegistration,
     registry: SettingsUiRegistry,
@@ -978,6 +1064,7 @@ private fun SettingsRootGroup(
                         title = page.title,
                         subtitle = page.subtitle,
                         icon = page.icon,
+                        tone = page.tone,
                         customIcon = customPageIcons[pageId],
                         first = index == 0,
                         last = index == group.pages.lastIndex,
@@ -990,6 +1077,32 @@ private fun SettingsRootGroup(
 }
 
 @Composable
+private fun SettingsTone.iconContainerColor(): Color =
+    when (this) {
+        SettingsTone.BLUE -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.75f)
+        SettingsTone.CYAN -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.85f)
+        SettingsTone.GREEN -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
+        SettingsTone.GOLD -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.7f)
+        SettingsTone.ORANGE -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.65f)
+        SettingsTone.PURPLE -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.85f)
+        SettingsTone.ROSE -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
+        SettingsTone.NEUTRAL -> MaterialTheme.colorScheme.surfaceContainerHighest
+    }
+
+@Composable
+private fun SettingsTone.iconTintColor(): Color =
+    when (this) {
+        SettingsTone.BLUE -> MaterialTheme.colorScheme.onPrimaryContainer
+        SettingsTone.CYAN -> MaterialTheme.colorScheme.onSecondaryContainer
+        SettingsTone.GREEN -> MaterialTheme.colorScheme.onTertiaryContainer
+        SettingsTone.GOLD -> MaterialTheme.colorScheme.onTertiaryContainer
+        SettingsTone.ORANGE -> MaterialTheme.colorScheme.onPrimaryContainer
+        SettingsTone.PURPLE -> MaterialTheme.colorScheme.onTertiaryContainer
+        SettingsTone.ROSE -> MaterialTheme.colorScheme.onPrimaryContainer
+        SettingsTone.NEUTRAL -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+@Composable
 internal fun SettingsNavigationRow(
     title: String,
     icon: ImageVector,
@@ -998,6 +1111,7 @@ internal fun SettingsNavigationRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    tone: SettingsTone? = null,
     customIcon: (@Composable (Color) -> Unit)? = null,
     iconSize: Dp = 24.dp,
     iconTint: Color? = null,
@@ -1022,14 +1136,25 @@ internal fun SettingsNavigationRow(
                 .then(focusModifier(shape))
                 .clip(shape)
                 .background(containerColor)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), shape)
                 .focusOutline(shape)
                 .clickable(interactionSource = interactionSource, indication = ripple(), onClick = onClick)
                 .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val resolvedIconTint = iconTint ?: MaterialTheme.colorScheme.onSurfaceVariant
+        val resolvedIconTint = iconTint ?: tone?.iconTintColor() ?: MaterialTheme.colorScheme.onSurfaceVariant
+        val badgeSize = if (tone != null) iconSize + 16.dp else iconSize + 8.dp
         Box(
-            modifier = Modifier.size(iconSize + 8.dp),
+            modifier =
+                Modifier
+                    .size(badgeSize)
+                    .then(
+                        if (tone != null) {
+                            Modifier.clip(RoundedCornerShape(12.dp)).background(tone.iconContainerColor())
+                        } else {
+                            Modifier
+                        },
+                    ),
             contentAlignment = Alignment.Center,
         ) {
             if (customIcon != null) {
@@ -1043,6 +1168,7 @@ internal fun SettingsNavigationRow(
             Text(
                 title,
                 style = MaterialTheme.typography.bodyLarge,
+                fontWeight = if (tone != null) FontWeight.Medium else FontWeight.Normal,
                 fontSize = titleFontSize,
             )
             subtitle?.let {

@@ -100,6 +100,7 @@ fun AboutScreen(
     logo: Painter,
     modifier: Modifier = Modifier,
     appName: String = "",
+    packageName: String = "",
     version: String = BuildConfig.APP_VERSION,
     architecture: String = remember { getAppArchitecture().uppercase() },
     isDebug: Boolean = BuildConfig.DEBUG,
@@ -204,6 +205,7 @@ fun AboutScreen(
             AppHeaderCard(
                 logo = logo,
                 appName = appName,
+                packageName = packageName,
                 version = version,
                 architecture = architecture,
                 isDebug = isDebug,
@@ -214,6 +216,16 @@ fun AboutScreen(
             CommunitySection(
                 text = text,
                 onOpenLink = openCommunityLink,
+            )
+
+            CollaboratorsList(
+                contributors = listOf(AboutContributors.evolvedMaintainer),
+                text = text,
+                title = text.evolvedSection,
+                avatarSize = 64.dp,
+                colorScheme = colorScheme,
+                onContributorClick = { selectedContributor = it },
+                onContributorLongClick = onContributorLongClick,
             )
 
             CollaboratorsList(
@@ -294,6 +306,7 @@ internal fun contributorShape(contributor: AboutContributor): Shape =
 private fun AppHeaderCard(
     logo: Painter,
     appName: String,
+    packageName: String,
     version: String,
     architecture: String,
     isDebug: Boolean,
@@ -338,6 +351,16 @@ private fun AppHeaderCard(
                 color = colorScheme.onSurface,
                 textAlign = TextAlign.Center,
             )
+
+            if (packageName.isNotBlank()) {
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = packageName,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = colorScheme.primary,
+                    textAlign = TextAlign.Center,
+                )
+            }
 
             Spacer(Modifier.height(12.dp))
 

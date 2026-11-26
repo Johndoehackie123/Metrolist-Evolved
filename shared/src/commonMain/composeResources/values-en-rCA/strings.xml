@@ -268,8 +268,8 @@
 
     <string name="settings_appearance_overview">Theme, fonts and player appearance</string>
     <string name="settings_android_auto_overview">Driving playlists and quick-add destination</string>
-    <string name="settings_about_overview">Contributors, community links and licenses</string>
-    <string name="settings_supported_links_overview">Choose which YouTube links open in Metrolist</string>
+    <string name="settings_about_overview">Metrolist Evolved maintainer, contributors, links and license</string>
+    <string name="settings_supported_links_overview">Choose which YouTube links open in Metrolist Evolved</string>
     <string name="settings_equalizer_overview">Sound presets, frequency bands and profiles</string>
     <string name="settings_fonts_overview">Font selection and font imports</string>
     <string name="settings_artwork_overview">Animated covers, artwork sources and video quality</string>
@@ -285,7 +285,7 @@
     <string name="settings_listen_together_overview">Server, join requests and song suggestions</string>
     <string name="settings_device_connect_overview">Nearby devices, pairing and remote playback</string>
     <string name="settings_release_overview">Release notes and installation options</string>
-    <string name="settings_notification_access_summary">Choose which notifications Android allows for Metrolist</string>
+    <string name="settings_notification_access_summary">Choose which notifications Android allows for Metrolist Evolved</string>
     <string name="settings_crash_reports_summary">Read and share saved crash reports</string>
     <string name="settings_content_language_summary">Language used for YouTube Music search and recommendations</string>
     <string name="settings_content_country_summary">Region used for YouTube Music charts and recommendations</string>
@@ -305,7 +305,7 @@
     <string name="settings_canvas_playback_summary">Play short clips or the full music video behind the player</string>
     <string name="settings_normalization_summary">Balance volume between songs to avoid large changes</string>
     <string name="settings_loudness_target_summary">Set the target loudness when audio normalization is on</string>
-    <string name="settings_stop_on_close_summary">Stop playback when Metrolist is swiped out of recent apps</string>
+    <string name="settings_stop_on_close_summary">Stop playback when Metrolist Evolved is swiped out of recent apps</string>
     <string name="settings_screen_awake_summary">Choose whether the player or lyrics keep the display awake</string>
     <string name="settings_translation_mode_summary">Translate words or transcribe pronunciation into the target script</string>
     <string name="settings_translation_provider_summary">Choose the service that translates lyrics</string>
@@ -324,7 +324,7 @@
     <string name="settings_reset_download_folder_summary">Use the default folder for downloaded songs</string>
     <string name="settings_diagnostic_logs_summary">Read and copy the app's diagnostic log</string>
     <string name="settings_log_directory_summary">Browse saved log files in your file manager</string>
-    <string name="settings_check_releases_summary">Check GitHub for a newer Metrolist release</string>
+    <string name="settings_check_releases_summary">Check GitHub for a newer Metrolist Evolved release</string>
     <string name="settings_share_apk_summary">Share the installed app package as a file</string>
     <string name="settings_system_font_summary">Use the font supplied by your operating system</string>
     <string name="settings_thumbnail_shape_summary">Choose the shape of artwork in the expanded player</string>

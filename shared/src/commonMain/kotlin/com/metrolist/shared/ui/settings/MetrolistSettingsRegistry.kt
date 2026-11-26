@@ -147,6 +147,8 @@ fun rememberMetrolistSettingsRegistry(
 
                     SettingsPageId.ABOUT -> {
                         listOf(
+                            Res.string.credits_evolved_section,
+                            Res.string.credits_evolved_maintainer,
                             Res.string.credits_creator_section,
                             Res.string.credits_collaborators_section,
                             Res.string.brand_github,
@@ -199,7 +201,7 @@ fun rememberMetrolistSettingsRegistry(
         stringResource(Res.string.settings_updates_title),
         settingsPageSubtitle(stringResource(Res.string.settings_updates_overview), host.updateSummary),
         MetrolistIcons.Outlined.Update,
-        SettingsTone.NEUTRAL,
+        SettingsTone.GREEN,
     )
     customPage(
         SettingsPageId.DEVTOOLS,
@@ -213,7 +215,7 @@ fun rememberMetrolistSettingsRegistry(
         stringResource(Res.string.settings_about_title),
         stringResource(Res.string.settings_about_overview),
         MetrolistIcons.Outlined.Info,
-        SettingsTone.NEUTRAL,
+        SettingsTone.PURPLE,
     )
     customPage(
         SettingsPageId.UPDATE_DETAILS,

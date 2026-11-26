@@ -8,8 +8,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Bottom navigation -->
     <!-- Translators: Label for app name in the multiple app screens. -->
-    <string name="app_name" translatable="false">Metrolist</string>
-    <string name="account_menu_license" translatable="false">GPL-3.0 MetrolistGroup</string>
+    <string name="app_name" translatable="false">Metrolist Evolved</string>
+    <string name="account_menu_license" translatable="false">GPL-3.0 · Metrolist Evolved</string>
     <!-- Translators: Apple mobile platform name displayed in application information. -->
     <!-- Translators: Navigation label for home in the multiple app screens. -->
     <string name="home">Home</string>
@@ -771,7 +771,9 @@
     <!-- Translators: Label for credits license name in the About screen. -->
     <string name="credits_license_name">License</string>
     <!-- Translators: Supporting text beneath the credits license option in the About screen. -->
-    <string name="credits_license_desc">Metrolist is licensed under GPL-3.0</string>
+    <string name="credits_license_desc">Metrolist Evolved is licensed under GPL-3.0</string>
+    <string name="credits_evolved_section" translatable="false">Metrolist Evolved</string>
+    <string name="credits_evolved_maintainer" translatable="false">Metrolist Evolved maintainer</string>
     <!-- Translators: Confirmation prompt for wanna play favorite song; retained for translation compatibility but not currently referenced by app code. -->
     <!-- Translators: Message explaining yeah; retained for translation compatibility but not currently referenced by app code. -->
     <!-- Translators: Label for credits collaborators section in the About screen. -->
@@ -894,9 +896,9 @@
     <!-- Translators: Heading for updates in the settings. -->
     <string name="settings_updates_title">Updates</string>
     <!-- Translators: Supporting text beneath the available option in the settings. -->
-    <string name="settings_updates_available_description">A new Metrolist update is available</string>
+    <string name="settings_updates_available_description">A new Metrolist Evolved update is available</string>
     <!-- Translators: Heading for about in the settings. -->
-    <string name="settings_about_title">About Metrolist</string>
+    <string name="settings_about_title">About Metrolist Evolved</string>
     <!-- Translators: Heading for devtools in the settings and app-wide dialogs. -->
     <string name="devtools_title" translatable="false">Devtools</string>
     <!-- Translators: Label for devtools enabled in the About screen. -->
@@ -1742,11 +1744,11 @@
     <!-- Translators: Progress or status message for checking in the update settings. -->
     <string name="updates_checking">Checking for updates…</string>
     <!-- Translators: Option or section label for no updates in the update settings. -->
-    <string name="updates_no_updates">Metrolist is up to date</string>
+    <string name="updates_no_updates">Metrolist Evolved is up to date</string>
     <!-- Translators: Error message about updates in the update settings. -->
     <string name="updates_error">Couldn\u0027t check for updates</string>
     <!-- Translators: Option or section label for current in the update settings. %1$s is the installed app version. -->
-    <string name="updates_status_current">Updated to Metrolist %1$s</string>
+    <string name="updates_status_current">Updated to Metrolist Evolved %1$s</string>
     <!-- Translators: Option or section label for auto check in the update settings. -->
     <string name="updates_auto_check">Automatically check for updates</string>
     <!-- Translators: Imperative action label for notifications in the update settings. -->
@@ -1771,7 +1773,7 @@
     <string name="updates_installing_description">Downloading and installing the update</string>
     <!-- Translators: Progress or status message for download progress in the update settings. %1$d is the percentage; %2$s is the percent symbol. -->
     <!-- Translators: Option or section label for version in the update settings. -->
-    <string name="updates_version">Metrolist version</string>
+    <string name="updates_version">Metrolist Evolved version</string>
     <!-- Translators: Imperative action label for size in the update settings. -->
     <string name="updates_size">Update size</string>
     <!-- Translators: Option or section label for date in the update settings. -->
@@ -1787,7 +1789,7 @@
     <!-- Translators: Button that installs a downloaded update without checking its checksum or signature first. -->
     <string name="updates_force_install">Install anyway</string>
     <!-- Translators: Heading for available in the update settings. %1$s is the available app version. -->
-    <string name="updates_available_title">Metrolist %1$s is available</string>
+    <string name="updates_available_title">Metrolist Evolved %1$s is available</string>
     <!-- Translators: Dialog or notice body text for available in the update settings. -->
     <string name="updates_available_message">Tap Update to download the update and continue to Android\u0027s installer.</string>
     <!-- Translators: Option or section label for changelog preview in the update settings. -->
@@ -1799,13 +1801,13 @@
     <!-- Translators: Imperative action label for updates in the update settings. -->
     <string name="updates_action">Update</string>
     <!-- Translators: Heading for notification in the update settings. %1$s is the downloaded app version. -->
-    <string name="updates_notification_title">Metrolist %1$s is ready</string>
+    <string name="updates_notification_title">Metrolist Evolved %1$s is ready</string>
     <!-- Translators: Option or section label for notification text in the update settings. -->
     <string name="updates_notification_text">Tap to download and install the update</string>
     <!-- Translators: Option or section label for channel name in the update settings. -->
     <string name="updates_channel_name">App updates</string>
     <!-- Translators: Supporting text beneath the channel option in the update settings. -->
-    <string name="updates_channel_description">Notifications about new Metrolist versions</string>
+    <string name="updates_channel_description">Notifications about new Metrolist Evolved versions</string>
     <!-- Translators: Error message about download in the update settings. -->
     <string name="updates_download_failed">The update could not be downloaded.</string>
     <!-- Translators: Error message about digest in the update settings. -->
@@ -3529,7 +3531,7 @@
     <!-- Translators: Label for user icon in the account menu. -->
     <string name="account_user_icon">User</string>
     <!-- Translators: Heading for menu in the account menu. %1$s is the app version. -->
-    <string name="account_menu_title" translatable="false">Metrolist-KMP (%1$s)</string>
+    <string name="account_menu_title" translatable="false">Metrolist Evolved (%1$s)</string>
     <!-- Translators: Label for not signed in in the account menu. -->
     <!-- Translators: Progress or status message for logging out; retained for translation compatibility but not currently referenced by app code. -->
     <!-- Translators: Confirmation prompt for logout in the account menu. -->
@@ -3832,7 +3834,7 @@
     <!-- Translators: Progress or status message for report issue in the desktop application menu. -->
     <string name="menu_report_issue">Report an issue…</string>
     <!-- Translators: Label for about metrolist in the desktop application menu. -->
-    <string name="menu_about_metrolist">About Metrolist</string>
+    <string name="menu_about_metrolist">About Metrolist Evolved</string>
     <!-- Translators: Label for song in the desktop application menu. -->
     <string name="menu_song">Song</string>
     <!-- Translators: Imperative action label for stop in the desktop application menu. -->
@@ -5536,8 +5538,8 @@
     <!-- Settings page contents and explanations for controls. -->
     <string name="settings_appearance_overview">Theme, fonts and player appearance</string>
     <string name="settings_android_auto_overview">Driving playlists and quick-add destination</string>
-    <string name="settings_about_overview">Contributors, community links and licenses</string>
-    <string name="settings_supported_links_overview">Choose which YouTube links open in Metrolist</string>
+    <string name="settings_about_overview">Metrolist Evolved maintainer, contributors, links and license</string>
+    <string name="settings_supported_links_overview">Choose which YouTube links open in Metrolist Evolved</string>
     <string name="settings_equalizer_overview">Sound presets, frequency bands and profiles</string>
     <string name="settings_fonts_overview">Font selection and font imports</string>
     <string name="settings_artwork_overview">Animated covers, artwork sources and video quality</string>
@@ -5553,7 +5555,7 @@
     <string name="settings_listen_together_overview">Server, join requests and song suggestions</string>
     <string name="settings_device_connect_overview">Nearby devices, pairing and remote playback</string>
     <string name="settings_release_overview">Release notes and installation options</string>
-    <string name="settings_notification_access_summary">Choose which notifications Android allows for Metrolist</string>
+    <string name="settings_notification_access_summary">Choose which notifications Android allows for Metrolist Evolved</string>
     <string name="settings_crash_reports_summary">Read and share saved crash reports</string>
     <string name="settings_content_language_summary">Language used for YouTube Music search and recommendations</string>
     <string name="settings_content_country_summary">Region used for YouTube Music charts and recommendations</string>
@@ -5574,7 +5576,7 @@
     <string name="settings_canvas_playback_summary">Play short clips or the full music video behind the player</string>
     <string name="settings_normalization_summary">Balance volume between songs to avoid large changes</string>
     <string name="settings_loudness_target_summary">Set the target loudness when audio normalization is on</string>
-    <string name="settings_stop_on_close_summary">Stop playback when Metrolist is swiped out of recent apps. On Android TV, playback also pauses when you leave the app.</string>
+    <string name="settings_stop_on_close_summary">Stop playback when Metrolist Evolved is swiped out of recent apps. On Android TV, playback also pauses when you leave the app.</string>
     <string name="settings_screen_awake_summary">Choose whether the player or lyrics keep the display awake</string>
     <string name="settings_translation_mode_summary">Translate words or transcribe pronunciation into the target script</string>
     <string name="settings_translation_provider_summary">Choose the service that translates lyrics</string>
@@ -5593,7 +5595,7 @@
     <string name="settings_reset_download_folder_summary">Use the default folder for downloaded songs</string>
     <string name="settings_diagnostic_logs_summary">Read and copy the app's diagnostic log</string>
     <string name="settings_log_directory_summary">Browse saved log files in your file manager</string>
-    <string name="settings_check_releases_summary">Check GitHub for a newer Metrolist release</string>
+    <string name="settings_check_releases_summary">Check GitHub for a newer Metrolist Evolved release</string>
     <string name="settings_share_apk_summary">Share the installed app package as a file</string>
     <string name="settings_system_font_summary">Use the font supplied by your operating system</string>
     <string name="settings_thumbnail_shape_summary">Choose the shape of artwork in the expanded player</string>
