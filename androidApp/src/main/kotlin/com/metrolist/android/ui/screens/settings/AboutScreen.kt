@@ -43,6 +43,7 @@ fun AndroidAboutScreen(
     AboutScreen(
         logo = painterResource(Res.drawable.logo),
         appName = stringResource(Res.string.app_name),
+        packageName = context.packageName,
         version = BuildConfig.VERSION_NAME,
         isDebug = BuildConfig.DEBUG,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp),

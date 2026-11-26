@@ -77,10 +77,10 @@ class MusicWidgetReceiver :
     }
 
     companion object {
-        const val ACTION_PLAY_PAUSE = "com.metrolist.music.widget.PLAY_PAUSE"
-        const val ACTION_LIKE = "com.metrolist.music.widget.LIKE"
-        const val ACTION_NEXT = "com.metrolist.music.widget.NEXT"
-        const val ACTION_PREVIOUS = "com.metrolist.music.widget.PREVIOUS"
-        const val ACTION_UPDATE_WIDGET = "com.metrolist.music.widget.UPDATE_WIDGET"
+        const val ACTION_PLAY_PAUSE = "com.metrolist.music.evolved.widget.PLAY_PAUSE"
+        const val ACTION_LIKE = "com.metrolist.music.evolved.widget.LIKE"
+        const val ACTION_NEXT = "com.metrolist.music.evolved.widget.NEXT"
+        const val ACTION_PREVIOUS = "com.metrolist.music.evolved.widget.PREVIOUS"
+        const val ACTION_UPDATE_WIDGET = "com.metrolist.music.evolved.widget.UPDATE_WIDGET"
     }
 }

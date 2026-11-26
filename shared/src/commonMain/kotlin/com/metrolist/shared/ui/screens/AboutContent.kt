@@ -46,6 +46,8 @@ import com.metrolist.shared.generated.resources.credits_creator
 import com.metrolist.shared.generated.resources.credits_creator_section
 import com.metrolist.shared.generated.resources.credits_desktop_developer
 import com.metrolist.shared.generated.resources.credits_desktop_lead
+import com.metrolist.shared.generated.resources.credits_evolved_maintainer
+import com.metrolist.shared.generated.resources.credits_evolved_section
 import com.metrolist.shared.generated.resources.credits_leads_section
 import com.metrolist.shared.generated.resources.credits_license_desc
 import com.metrolist.shared.generated.resources.credits_license_name
@@ -70,9 +72,11 @@ import org.jetbrains.compose.resources.stringResource as sharedStringResource
 fun rememberAboutScreenText(): AboutScreenText =
     AboutScreenText(
         title = sharedStringResource(Res.string.about),
+        evolvedSection = sharedStringResource(Res.string.credits_evolved_section),
         creatorSection = sharedStringResource(Res.string.credits_creator_section),
         leadsSection = sharedStringResource(Res.string.credits_leads_section),
         collaborators = sharedStringResource(Res.string.credits_collaborators_section),
+        evolvedMaintainerRole = sharedStringResource(Res.string.credits_evolved_maintainer),
         creatorRole = sharedStringResource(Res.string.credits_creator),
         androidLeadRole = sharedStringResource(Res.string.credits_android_lead),
         desktopLeadRole = sharedStringResource(Res.string.credits_desktop_lead),
@@ -93,6 +97,7 @@ fun rememberAboutScreenText(): AboutScreenText =
     )
 
 enum class AboutContributorRole {
+    EVOLVED_MAINTAINER,
     CREATOR,
     ANDROID_LEAD,
     DESKTOP_LEAD,
@@ -135,6 +140,15 @@ data class AboutContributor(
 }
 
 object AboutContributors {
+    val evolvedMaintainer: AboutContributor =
+        AboutContributor(
+            name = "Johndoehackie123",
+            role = AboutContributorRole.EVOLVED_MAINTAINER,
+            githubHandle = "Johndoehackie123",
+            websiteUrl = "https://github.com/Johndoehackie123/Metrolist-Evolved",
+            avatarShape = AboutAvatarShape.GEM,
+        )
+
     val lead: AboutContributor =
         AboutContributor(
             name = "Mo Agamy",
@@ -226,7 +240,7 @@ object AboutContributors {
             ),
         ).sortedBy { it.name.lowercase() }
 
-    val all: List<AboutContributor> = listOf(lead) + leads + collaborators
+    val all: List<AboutContributor> = listOf(evolvedMaintainer, lead) + leads + collaborators
 }
 
 enum class AboutCommunityLinkKind {
@@ -253,9 +267,11 @@ val aboutLicenseLink: AboutCommunityLink =
 
 data class AboutScreenText(
     val title: String,
+    val evolvedSection: String,
     val creatorSection: String,
     val leadsSection: String,
     val collaborators: String,
+    val evolvedMaintainerRole: String,
     val creatorRole: String,
     val androidLeadRole: String,
     val desktopLeadRole: String,
@@ -276,6 +292,7 @@ data class AboutScreenText(
 ) {
     fun roleLabel(role: AboutContributorRole): String =
         when (role) {
+            AboutContributorRole.EVOLVED_MAINTAINER -> evolvedMaintainerRole
             AboutContributorRole.CREATOR -> creatorRole
             AboutContributorRole.ANDROID_LEAD -> androidLeadRole
             AboutContributorRole.DESKTOP_LEAD -> desktopLeadRole
@@ -332,6 +349,7 @@ fun AuthorInfoSheet(
 ) {
     val roleLabel =
         when (contributor.role) {
+            AboutContributorRole.EVOLVED_MAINTAINER -> sharedStringResource(Res.string.credits_evolved_maintainer)
             AboutContributorRole.CREATOR -> sharedStringResource(Res.string.credits_creator)
             AboutContributorRole.ANDROID_LEAD -> sharedStringResource(Res.string.credits_android_lead)
             AboutContributorRole.DESKTOP_LEAD -> sharedStringResource(Res.string.credits_desktop_lead)

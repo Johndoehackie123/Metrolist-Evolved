@@ -1,3 +1,13 @@
+---v14.2.0
+# Metrolist Evolved 14.2.0
+Metrolist Evolved 14.2.0 introduces the standalone `com.metrolist.music.evolved` Android package ID so it can be installed alongside standard Metrolist, rebrands the app to Metrolist Evolved, and refreshes the Settings and About screens.
+
+## Highlights
+- Renamed the app to **Metrolist Evolved** across Android and shared resources
+- Switched the Android package ID to `com.metrolist.music.evolved` (side-by-side installable with upstream Metrolist)
+- Added a **Metrolist Evolved** app overview banner and tonal category icon badges on the Settings screen
+- Updated the **About Metrolist Evolved** screen with package ID details and Metrolist Evolved maintainer credits
+
 ---v14.1.0
 # Metrolist Evolved 14.1.0
 Metrolist Evolved 14.1.0 introduces Material 3 Expressive visual refinements across Android, iOS and desktop, and switches in-app updates to the Metrolist-Evolved repository.

@@ -1,0 +1,6 @@
+Metrolist Evolved 14.2.0 switches the Android package ID to com.metrolist.music.evolved and refreshes Settings and About.
+
+• Renamed app to Metrolist Evolved across Android and shared resources
+• Changed Android package ID to com.metrolist.music.evolved for side-by-side install
+• Added Metrolist Evolved overview card and tonal icon badges in Settings
+• Updated About Metrolist Evolved with package ID and maintainer credits

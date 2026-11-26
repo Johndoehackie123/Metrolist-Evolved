@@ -115,12 +115,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.metrolist.music.action.SEARCH" />
+                <action android:name="com.metrolist.music.evolved.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <intent-filter>
-                <action android:name="com.metrolist.music.action.LIBRARY" />
+                <action android:name="com.metrolist.music.evolved.action.LIBRARY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -610,7 +610,7 @@
             android:theme="@android:style/Theme.NoDisplay"
             android:process=":crash">
             <intent-filter>
-                <action android:name="com.metrolist.music.action.CRASH_LOGS" />
+                <action android:name="com.metrolist.music.evolved.action.CRASH_LOGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
