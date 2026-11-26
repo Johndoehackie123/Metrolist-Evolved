@@ -123,6 +123,8 @@ jobs:
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
+          GRADLE_OPTS: >-
+            -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=60.0 -XX:+UseParallelGC -Dfile.encoding=UTF-8"
         run: |
           set -euo pipefail
           args=(
@@ -141,7 +143,11 @@ jobs:
               "-Dorg.gradle.java.installations.paths=$JAVA_HOME"
             )
           fi
-          ./gradlew "${args[@]}"
+          log="$RUNNER_TEMP/build-macos.log"
+          if ! ./gradlew "${args[@]}" > >(tee "$log") 2> >(tee -a "$log" >&2); then
+            echo "::error title=macOS DMG build failed::$(tail -n 60 "$log" | tr '\n' ' ' | head -c 3500)"
+            exit 1
+          fi
 
       - name: Verify macOS app bundle
         shell: bash

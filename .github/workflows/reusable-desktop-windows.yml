@@ -162,6 +162,8 @@ jobs:
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
+          GRADLE_OPTS: >-
+            -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=60.0 -XX:+UseParallelGC -Dfile.encoding=UTF-8"
         run: |
           set -euo pipefail
           rm -rf dist
@@ -169,13 +171,17 @@ jobs:
           if [[ '${{ inputs.run-verification }}' == 'true' ]]; then
             verification+=(:desktopApp:jvmTest)
           fi
-          ./gradlew "${verification[@]}" \
+          log="$RUNNER_TEMP/build-windows.log"
+          if ! ./gradlew "${verification[@]}" \
             :desktopApp:assembleWindowsRelease \
             -Pmetrolist.debug=false \
             -Pmetrolist.verifyPackaging=${{ inputs.run-verification }} \
             -Pmetrolist.desktop.arch=${{ matrix.arch == 'arm64' && 'aarch64' || 'x86_64' }} \
             --no-daemon \
-            --no-configuration-cache
+            --no-configuration-cache > >(tee "$log") 2> >(tee -a "$log" >&2); then
+            echo "::error title=Windows portable build failed::$(tail -n 60 "$log" | tr '\n' ' ' | head -c 3500)"
+            exit 1
+          fi
           if [[ "dist/Metrolist-Desktop-Windows.zip" != "$PACKAGE_ZIP" ]]; then
             mv dist/Metrolist-Desktop-Windows.zip "$PACKAGE_ZIP"
           fi

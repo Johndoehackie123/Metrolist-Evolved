@@ -219,20 +219,33 @@ jobs:
           fi
 
       - name: Compile iOS release framework
+        shell: bash
         env:
           CONFIGURATION: Release
           ORG_GRADLE_PROJECT_metrolist.verifyPackaging: ${{ inputs.run-verification }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
-        run: ./gradlew :shared:linkReleaseFrameworkIosArm64 --no-configuration-cache
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/build-ios-framework.log"
+          if ! ./gradlew :shared:linkReleaseFrameworkIosArm64 --no-configuration-cache > >(tee "$log") 2> >(tee -a "$log" >&2); then
+            echo "::error title=iOS framework compile failed::$(tail -n 60 "$log" | tr '\n' ' ' | head -c 3500)"
+            exit 1
+          fi
 
       - name: Build iOS IPA
+        shell: bash
         env:
           ORG_GRADLE_PROJECT_metrolist.verifyPackaging: ${{ inputs.run-verification }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
         run: |
-          ./scripts/build_ios.sh --ipa
+          set -euo pipefail
+          log="$RUNNER_TEMP/build-ios-ipa.log"
+          if ! ./scripts/build_ios.sh --ipa > >(tee "$log") 2> >(tee -a "$log" >&2); then
+            echo "::error title=iOS IPA build failed::$(tail -n 60 "$log" | tr '\n' ' ' | head -c 3500)"
+            exit 1
+          fi
 
       - name: Upload iOS debug symbols to Sentry
         if: inputs.upload-sentry

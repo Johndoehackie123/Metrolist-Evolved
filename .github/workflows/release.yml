@@ -514,6 +514,7 @@ jobs:
 
   winget:
     name: Submit to WinGet
+    if: github.repository == 'MetrolistGroup/Metrolist'
     needs: [prepare, publish]
     runs-on: ubuntu-latest
     timeout-minutes: 15

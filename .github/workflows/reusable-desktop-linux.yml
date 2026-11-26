@@ -103,7 +103,15 @@ jobs:
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
           LYPRIO_BASE_URL: ${{ secrets.LYPRIO_BASE_URL }}
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
-        run: ./scripts/build_appimage.sh -Pmetrolist.verifyPackaging=${{ inputs.run-verification }}
+          GRADLE_OPTS: >-
+            -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=60.0 -XX:+UseParallelGC -Dfile.encoding=UTF-8"
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/build-linux.log"
+          if ! ./scripts/build_appimage.sh -Pmetrolist.verifyPackaging=${{ inputs.run-verification }} > >(tee "$log") 2> >(tee -a "$log" >&2); then
+            echo "::error title=Linux AppImage build failed::$(tail -n 60 "$log" | tr '\n' ' ' | head -c 3500)"
+            exit 1
+          fi
 
       - name: Upload desktop Sentry source context
         if: inputs.upload-sentry && steps.sentry.outputs.available == 'true'
