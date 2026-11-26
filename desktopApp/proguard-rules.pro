@@ -71,6 +71,10 @@
 -dontwarn kotlin.reflect.jvm.ReflectJvmMapping
 
 # Optional integrations absent from the runtime.
+-dontwarn androidx.compose.ui.graphics.layer.NucleusGraphicsLayerHooks
+-dontwarn androidx.compose.ui.node.NucleusLayerDamage
+-dontwarn androidx.lifecycle.**
+-dontwarn androidx.navigationevent.**
 -dontwarn io.github.g00fy2.versioncompare.**
 -dontwarn okhttp3.internal.graal.**
 -dontwarn okhttp3.internal.platform.**
@@ -80,5 +84,7 @@
 -dontwarn com.charleskorn.kaml.**
 -dontwarn org.jetbrains.compose.devtools.**
 -dontwarn org.jetbrains.compose.reload.**
+-dontwarn org.jetbrains.compose.hot-reload.**
+-dontnote io.github.vinceglb.filekit.**
 
 -keepattributes Exceptions,InnerClasses,Signature,EnclosingMethod,*Annotation*
