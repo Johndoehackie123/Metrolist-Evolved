@@ -31,23 +31,34 @@ runs:
         KEY_PASSWORD: ${{ env.KEY_PASSWORD }}
       run: |
         if [ -z "$KEYSTORE_PATH" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
-          echo "Signing secrets not configured; generating deterministic Metrolist Evolved PKCS12 signing key"
+          echo "Signing secrets not configured; materializing persistent Metrolist Evolved PKCS12 signing key"
           KEYSTORE_FILE="${RUNNER_TEMP}/generated-release.p12"
           umask 077
           rm -f "$KEYSTORE_FILE"
+          FALLBACK_B64="${GITHUB_ACTION_PATH}/../../signing/metrolist-evolved-release.p12.b64"
+          if [ ! -s "$FALLBACK_B64" ]; then
+            echo "::error::Persistent signing keystore missing at $FALLBACK_B64"
+            exit 1
+          fi
+          base64 --decode < "$FALLBACK_B64" > "$KEYSTORE_FILE"
           GEN_PASS="metrolist-evolved-signing"
           GEN_ALIAS="metrolist"
-          keytool -genkeypair \
-            -keystore "$KEYSTORE_FILE" \
-            -storetype PKCS12 \
-            -storepass "$GEN_PASS" \
-            -keypass "$GEN_PASS" \
-            -alias "$GEN_ALIAS" \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -dname "CN=Metrolist Evolved, O=Metrolist, C=US" \
-            -noprompt
+          VALIDATION_STORE="${RUNNER_TEMP}/signing-fallback-validation.p12"
+          rm -f "$VALIDATION_STORE"
+          if ! keytool -importkeystore \
+            -srckeystore "$KEYSTORE_FILE" \
+            -srcstorepass "$GEN_PASS" \
+            -srcalias "$GEN_ALIAS" \
+            -srckeypass "$GEN_PASS" \
+            -destkeystore "$VALIDATION_STORE" \
+            -deststoretype PKCS12 \
+            -deststorepass metrolist-ci-validation \
+            -destkeypass metrolist-ci-validation \
+            -noprompt; then
+            echo "::error::Unable to validate persistent Metrolist Evolved PKCS12 signing key."
+            exit 1
+          fi
+          rm -f "$VALIDATION_STORE"
           echo "signing_available=true" >> "$GITHUB_OUTPUT"
           echo "keystore_path=$KEYSTORE_FILE" >> "$GITHUB_OUTPUT"
           echo "keystore_password=$GEN_PASS" >> "$GITHUB_OUTPUT"

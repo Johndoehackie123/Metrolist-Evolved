@@ -48,6 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.metrolist.shared.settings.NavLabelVisibility
+import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.components.focusOutline
 
 val LocalFloatingNavBar = compositionLocalOf { false }
@@ -185,6 +187,13 @@ private fun <T> FloatingNavigationItem(
         if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
         label = "floatingItemContent",
     )
+    val labelVisibility = Settings.shared.navLabelVisibility
+    val showLabel =
+        when (labelVisibility) {
+            NavLabelVisibility.ALWAYS -> true
+            NavLabelVisibility.SELECTED_ONLY -> selected
+            NavLabelVisibility.HIDDEN -> false
+        }
     Row(
         modifier =
             modifier
@@ -202,23 +211,54 @@ private fun <T> FloatingNavigationItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
-        AnimatedVisibility(
-            visible = selected,
-            enter = fadeIn() + expandHorizontally(spring(dampingRatio = 0.9f, stiffness = 700f)),
-            exit = fadeOut() + shrinkHorizontally(spring(dampingRatio = 0.9f, stiffness = 700f)),
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = item.selectedIcon, contentDescription = null, tint = contentColor)
-                Spacer(Modifier.width(8.dp))
+        if (!showLabel) {
+            Icon(
+                imageVector = if (selected) item.selectedIcon else item.icon,
+                contentDescription = item.label,
+                tint = contentColor,
+            )
+        } else if (labelVisibility == NavLabelVisibility.SELECTED_ONLY) {
+            Icon(
+                imageVector = if (selected) item.selectedIcon else item.icon,
+                contentDescription = if (selected) null else item.label,
+                tint = contentColor,
+            )
+            AnimatedVisibility(
+                visible = selected,
+                enter = fadeIn() + expandHorizontally(spring(dampingRatio = 0.9f, stiffness = 700f)),
+                exit = fadeOut() + shrinkHorizontally(spring(dampingRatio = 0.9f, stiffness = 700f)),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = item.label,
+                        color = contentColor,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
+        } else {
+            AnimatedVisibility(
+                visible = selected,
+                enter = fadeIn() + expandHorizontally(spring(dampingRatio = 0.9f, stiffness = 700f)),
+                exit = fadeOut() + shrinkHorizontally(spring(dampingRatio = 0.9f, stiffness = 700f)),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = item.selectedIcon, contentDescription = null, tint = contentColor)
+                    Spacer(Modifier.width(8.dp))
+                }
+            }
+            Text(
+                text = item.label,
+                color = contentColor,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
-        Text(
-            text = item.label,
-            color = contentColor,
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Medium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
     }
 }

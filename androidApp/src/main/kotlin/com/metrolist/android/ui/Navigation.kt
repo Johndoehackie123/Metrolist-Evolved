@@ -49,6 +49,7 @@ import com.metrolist.shared.ui.LocalIsTv
 import com.metrolist.shared.ui.haptics.HapticEvent
 import com.metrolist.shared.ui.haptics.rememberMetrolistHaptics
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import com.metrolist.shared.ui.navigation.AdaptiveLayout
 import com.metrolist.shared.ui.navigation.AdaptiveNavigationItem
 import com.metrolist.shared.ui.navigation.AdaptiveNavigationScaffold
@@ -102,7 +103,21 @@ val Screen.iconFilled: ImageVector?
             Screen.Settings -> MetrolistIcons.Filled.Settings
             Screen.History -> MetrolistIcons.Filled.History
             Screen.Statistics -> MetrolistIcons.Filled.SsidChart
-            Screen.ListenTogether -> MetrolistIcons.Outlined.Group
+            Screen.ListenTogether -> MetrolistIcons.Filled.Group
+            else -> null
+        }
+
+val Screen.iconRounded: ImageVector?
+    get() =
+        when (this) {
+            Screen.Home -> MetrolistIcons.Rounded.Home
+            Screen.Library -> MetrolistIcons.Rounded.LibraryMusic
+            Screen.Search -> MetrolistIcons.Rounded.Search
+            Screen.EasterEgg -> MetrolistIcons.Rounded.QuestionMark
+            Screen.Settings -> MetrolistIcons.Rounded.Settings
+            Screen.History -> MetrolistIcons.Rounded.History
+            Screen.Statistics -> MetrolistIcons.Rounded.SsidChart
+            Screen.ListenTogether -> MetrolistIcons.Rounded.Group
             else -> null
         }
 
@@ -139,15 +154,18 @@ fun MetrolistNavigationScaffold(
     val selectedScreen =
         (navigationState.currentRoute.takeIf { it in screens } ?: navigationState.topLevelRoute)
             .takeIf { it in screens } ?: screens.first()
+    val iconStyle = Settings.shared.iconStyle
     val items =
         screens.mapNotNull { screen ->
             val label = screen.labelRes?.let { stringResource(it) } ?: return@mapNotNull null
-            val icon = screen.icon ?: screen.iconFilled ?: return@mapNotNull null
+            val outlined = screen.icon ?: screen.iconFilled ?: return@mapNotNull null
+            val filled = screen.iconFilled ?: outlined
+            val rounded = screen.iconRounded ?: outlined
             AdaptiveNavigationItem(
                 key = screen,
                 label = label,
-                icon = icon,
-                selectedIcon = screen.iconFilled ?: icon,
+                icon = styledIcon(iconStyle, outlined = outlined, filled = filled, rounded = rounded, selected = false),
+                selectedIcon = styledIcon(iconStyle, outlined = outlined, filled = filled, rounded = rounded, selected = true),
             )
         }
     val hapticManager = rememberMetrolistHaptics()

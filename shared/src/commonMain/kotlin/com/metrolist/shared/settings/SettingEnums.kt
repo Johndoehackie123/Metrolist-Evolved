@@ -198,4 +198,68 @@ enum class GridItemSize {
     SMALL,
 }
 
+enum class ThemeContrastLevel {
+    SYSTEM,
+    STANDARD,
+    MEDIUM,
+    HIGH,
+    ;
+
+    val contrastOverride: Double?
+        get() =
+            when (this) {
+                SYSTEM -> null
+                STANDARD -> 0.0
+                MEDIUM -> 0.5
+                HIGH -> 1.0
+            }
+}
+
+enum class CornerStyle {
+    EXPRESSIVE,
+    ROUNDED,
+    SHARP,
+    PILL,
+}
+
+enum class SurfaceCardStyle {
+    EXPRESSIVE,
+    TONAL,
+    OUTLINED,
+    ELEVATED,
+    FLAT,
+}
+
+enum class IconStyle {
+    EXPRESSIVE,
+    ROUNDED,
+    OUTLINED,
+    FILLED,
+}
+
+enum class NavLabelVisibility {
+    ALWAYS,
+    SELECTED_ONLY,
+    HIDDEN,
+}
+
+enum class ArtistArtworkStyle {
+    EXPRESSIVE_POLYGONS,
+    CIRCLE,
+    ROUNDED_SQUARE,
+    TEARDROP,
+}
+
+enum class CurrentSongHighlightStyle {
+    EXPRESSIVE_PILL,
+    ROUNDED_CARD,
+    SUBTLE_TINT,
+}
+
+enum class MotionStyle {
+    EXPRESSIVE,
+    STANDARD,
+    REDUCED,
+}
+
 enum class SongShareLink { YOUTUBE_MUSIC, SONG_LINK }

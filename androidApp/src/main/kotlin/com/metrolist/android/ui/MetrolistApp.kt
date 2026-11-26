@@ -302,6 +302,7 @@ import com.metrolist.shared.playlistimport.PlaylistImportProgressCard
 import com.metrolist.shared.playlistimport.PlaylistImportStatusManager
 import com.metrolist.shared.scrobble.ScrobbleSessions
 import com.metrolist.shared.settings.MiniPlayerType
+import com.metrolist.shared.settings.NavLabelVisibility
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.defaultOpenTabRoot
 import com.metrolist.shared.settings.defaultOpenTabScreen
@@ -814,6 +815,7 @@ fun MetrolistApp(
             (useDesktopUi || currentRoute in topLevelRoutes) &&
                 !(currentRoute == Screen.Search && searchResultsVisible)
         val usesDirectionalNavigation = isAndroidTv || isAutomotive
+        val hideBottomLabels = Settings.shared.slimNavBar || Settings.shared.navLabelVisibility == NavLabelVisibility.HIDDEN
         val navigationSuiteType =
             when {
                 adaptiveFormFactor == AdaptiveFormFactor.TOUCH && isLandscape &&
@@ -821,7 +823,11 @@ fun MetrolistApp(
                     NavigationSuiteType.WideNavigationRailCollapsed
                 }
 
-                adaptiveLayout.navigationSuiteType.isNavigationBar && !Settings.shared.slimNavBar -> {
+                adaptiveLayout.navigationSuiteType.isNavigationBar && hideBottomLabels -> {
+                    NavigationSuiteType.ShortNavigationBarCompact
+                }
+
+                adaptiveLayout.navigationSuiteType.isNavigationBar && !hideBottomLabels -> {
                     NavigationSuiteType.NavigationBar
                 }
 

@@ -14,6 +14,8 @@ import androidx.compose.ui.semantics.stateDescription
 import com.metrolist.shared.generated.resources.Res
 import com.metrolist.shared.generated.resources.queue_current_paused
 import com.metrolist.shared.generated.resources.queue_current_playing
+import com.metrolist.shared.settings.CurrentSongHighlightStyle
+import com.metrolist.shared.settings.Settings
 import org.jetbrains.compose.resources.stringResource
 
 data class CurrentSongColors(
@@ -32,11 +34,21 @@ fun animateCurrentSongColors(
     content: Color = colorScheme.onSurface,
     subtitle: Color = colorScheme.onSurfaceVariant,
 ): CurrentSongColors {
+    val highlightStyle = Settings.shared.currentSongHighlightStyle
     val progress by animateFloatAsState(
         targetValue = if (isCurrent) 1f else 0f,
         animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
         label = "currentSongColors",
     )
+    if (highlightStyle == CurrentSongHighlightStyle.SUBTLE_TINT) {
+        val subtleContainer = lerp(colorScheme.surfaceContainerLow, colorScheme.primary, 0.14f)
+        return CurrentSongColors(
+            container = lerp(container, subtleContainer, progress),
+            content = lerp(content, colorScheme.primary, progress),
+            subtitle = lerp(subtitle, colorScheme.onSurfaceVariant, progress),
+            link = colorScheme.primary,
+        )
+    }
     return CurrentSongColors(
         container = lerp(container, colorScheme.primaryContainer, progress),
         content = lerp(content, colorScheme.onPrimaryContainer, progress),

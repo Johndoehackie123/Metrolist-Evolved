@@ -43,7 +43,7 @@ import com.metrolist.shared.constants.thumbnailHeight
 import com.metrolist.shared.generated.resources.Res
 import com.metrolist.shared.generated.resources.loading
 import com.metrolist.shared.settings.Settings
-import com.metrolist.shared.ui.theme.uiEnhanced
+import com.metrolist.shared.ui.theme.cornerScaledDp
 import org.jetbrains.compose.resources.stringResource
 
 private val ChipWidths = listOf(72.dp, 96.dp, 64.dp, 88.dp, 76.dp, 104.dp, 68.dp)
@@ -65,7 +65,7 @@ fun HomeLoadingPlaceholder(
         val isWide = maxWidth > 840.dp
         val horizontalPadding = if (isWide) 24.dp else 16.dp
         val tile = currentGridThumbnailHeight()
-        val tileShape = RoundedCornerShape(uiEnhanced(ThumbnailCornerRadius, 12.dp))
+        val tileShape = RoundedCornerShape(cornerScaledDp(ThumbnailCornerRadius, 12.dp, rounded = 9.dp, sharp = 4.dp, pill = 20.dp))
         val availableWidth = maxWidth.coerceAtMost(1400.dp) - horizontalPadding * 2
         val speedDial = speedDialLayout(availableWidth, Settings.shared.gridItemSize)
         val landscapeTile = (if (isWide) 170.dp else 136.dp) * (Settings.shared.gridItemSize.thumbnailHeight / GridThumbnailHeight)

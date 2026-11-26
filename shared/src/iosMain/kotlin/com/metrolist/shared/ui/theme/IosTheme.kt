@@ -72,7 +72,7 @@ private fun Bitmap.argbPixels(): List<Int> =
     }
 
 @Composable
-internal actual fun rememberReducedMotion(): Boolean {
+internal actual fun rememberPlatformReducedMotion(): Boolean {
     var reduced by remember { mutableStateOf(UIAccessibilityIsReduceMotionEnabled()) }
     DisposableEffect(Unit) {
         val notifications = NSNotificationCenter.defaultCenter

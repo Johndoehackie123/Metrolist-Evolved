@@ -183,6 +183,7 @@ import com.metrolist.shared.playlistimport.PlaylistImportProgressCard
 import com.metrolist.shared.repository.LyricsRepository
 import com.metrolist.shared.scrobble.ScrobbleSessions
 import com.metrolist.shared.settings.MiniPlayerType
+import com.metrolist.shared.settings.NavLabelVisibility
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.defaultOpenTabRoot
 import com.metrolist.shared.settings.displayName
@@ -215,6 +216,7 @@ import com.metrolist.shared.ui.components.lyrics.LyricsTranslationSnackbar
 import com.metrolist.shared.ui.components.rememberBottomSheetState
 import com.metrolist.shared.ui.design.expressive.components.ExpressiveMiniPlayerHeight
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import com.metrolist.shared.ui.listentogether.ListenTogetherGlobalEvents
 import com.metrolist.shared.ui.menu.ContentUndoHintsSnackbar
 import com.metrolist.shared.ui.menu.HiddenHomeItemsSnackbar
@@ -746,42 +748,68 @@ fun MobileApp(
         }
     }
 
+    val hideBottomLabels = Settings.shared.slimNavBar || Settings.shared.navLabelVisibility == NavLabelVisibility.HIDDEN
     val adaptiveLayout =
         currentAdaptiveLayout(AdaptiveFormFactor.TOUCH, forceBottomNavBar = Settings.shared.forceBottomNavBar).let { layout ->
             if (!layout.navigationSuiteType.isNavigationBar) return@let layout
             val navType =
-                if (Settings.shared.slimNavBar) {
+                if (hideBottomLabels) {
                     NavigationSuiteType.ShortNavigationBarCompact
                 } else {
                     NavigationSuiteType.NavigationBar
                 }
             layout.copy(navigationSuiteType = navType)
         }
+    val iconStyle = Settings.shared.iconStyle
     val navigationItems: List<AdaptiveNavigationItem<MobileRoute>> =
         listOf(
             AdaptiveNavigationItem<MobileRoute>(
                 MobileRoute.Home,
                 stringResource(Res.string.home),
-                MetrolistIcons.Outlined.Home,
-                MetrolistIcons.Filled.Home,
+                styledIcon(iconStyle, MetrolistIcons.Outlined.Home, MetrolistIcons.Filled.Home, MetrolistIcons.Rounded.Home, false),
+                styledIcon(iconStyle, MetrolistIcons.Outlined.Home, MetrolistIcons.Filled.Home, MetrolistIcons.Rounded.Home, true),
             ),
             AdaptiveNavigationItem<MobileRoute>(
                 MobileRoute.Search,
                 stringResource(Res.string.search),
-                MetrolistIcons.Outlined.Search,
-                MetrolistIcons.Filled.Search,
+                styledIcon(iconStyle, MetrolistIcons.Outlined.Search, MetrolistIcons.Filled.Search, MetrolistIcons.Rounded.Search, false),
+                styledIcon(iconStyle, MetrolistIcons.Outlined.Search, MetrolistIcons.Filled.Search, MetrolistIcons.Rounded.Search, true),
             ),
             AdaptiveNavigationItem<MobileRoute>(
                 MobileRoute.Library,
                 stringResource(Res.string.library),
-                MetrolistIcons.Outlined.LibraryMusic,
-                MetrolistIcons.Filled.LibraryMusic,
+                styledIcon(
+                    iconStyle,
+                    MetrolistIcons.Outlined.LibraryMusic,
+                    MetrolistIcons.Filled.LibraryMusic,
+                    MetrolistIcons.Rounded.LibraryMusic,
+                    false,
+                ),
+                styledIcon(
+                    iconStyle,
+                    MetrolistIcons.Outlined.LibraryMusic,
+                    MetrolistIcons.Filled.LibraryMusic,
+                    MetrolistIcons.Rounded.LibraryMusic,
+                    true,
+                ),
             ),
             AdaptiveNavigationItem<MobileRoute>(
                 MobileRoute.EasterEgg,
                 stringResource(Res.string.mysterious_fourth_tab),
-                MetrolistIcons.Filled.QuestionMark,
-                MetrolistIcons.Filled.QuestionMark,
+                styledIcon(
+                    iconStyle,
+                    MetrolistIcons.Filled.QuestionMark,
+                    MetrolistIcons.Filled.QuestionMark,
+                    MetrolistIcons.Rounded.QuestionMark,
+                    false,
+                ),
+                styledIcon(
+                    iconStyle,
+                    MetrolistIcons.Filled.QuestionMark,
+                    MetrolistIcons.Filled.QuestionMark,
+                    MetrolistIcons.Rounded.QuestionMark,
+                    true,
+                ),
             ),
         ).filter { it.key in visibleTabRoutes }
 

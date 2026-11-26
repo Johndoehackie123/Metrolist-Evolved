@@ -109,6 +109,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import com.metrolist.shared.BuildConfig
 import com.metrolist.shared.generated.resources.*
+import com.metrolist.shared.settings.Settings
+import com.metrolist.shared.settings.SurfaceCardStyle
 import com.metrolist.shared.ui.LocalIsTv
 import com.metrolist.shared.ui.components.ExpressiveSwitch
 import com.metrolist.shared.ui.components.RefreshIndicator
@@ -122,6 +124,8 @@ import com.metrolist.shared.ui.menu.ExpressiveSelectionMenu
 import com.metrolist.shared.ui.menu.trackPressPosition
 import com.metrolist.shared.ui.navigation.PredictiveNavigationContent
 import com.metrolist.shared.ui.navigation.rememberNavigationMotion
+import com.metrolist.shared.ui.theme.ComponentShapes
+import com.metrolist.shared.ui.theme.cornerScaledDp
 import com.metrolist.shared.ui.utils.DragScrollableColumn
 import com.metrolist.shared.ui.utils.desktopArrowScroll
 import com.metrolist.shared.ui.utils.segmentedGroupShape
@@ -975,25 +979,36 @@ private fun SettingsAppOverviewCard(
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
     val containerColor by animateColorAsState(
-        if (pressed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+        if (pressed) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.settingsRowContainerColor(),
         label = "settingsAppOverviewCard",
     )
+    val cardShape = ComponentShapes.CardShape
+    val iconShape = RoundedCornerShape(cornerScaledDp(10.dp, 16.dp, rounded = 12.dp, sharp = 4.dp, pill = 24.dp))
+    val badgeShape = RoundedCornerShape(cornerScaledDp(8.dp, 14.dp, rounded = 10.dp, sharp = 4.dp, pill = 20.dp))
+    val cardStyle = Settings.shared.surfaceCardStyle
+    val borderStroke =
+        when (cardStyle) {
+            SurfaceCardStyle.OUTLINED -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
+            SurfaceCardStyle.FLAT -> null
+            else -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
+        }
     Surface(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp))
+                .clip(cardShape)
                 .clickable(interactionSource = interactionSource, indication = ripple(), onClick = onClick),
-        shape = RoundedCornerShape(24.dp),
+        shape = cardShape,
         color = containerColor,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
+        shadowElevation = MaterialTheme.colorScheme.settingsRowElevation(),
+        border = borderStroke,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Surface(
-                shape = RoundedCornerShape(16.dp),
+                shape = iconShape,
                 color = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.size(48.dp),
             ) {
@@ -1024,7 +1039,7 @@ private fun SettingsAppOverviewCard(
             }
             Spacer(Modifier.width(12.dp))
             Surface(
-                shape = RoundedCornerShape(14.dp),
+                shape = badgeShape,
                 color = MaterialTheme.colorScheme.secondaryContainer,
             ) {
                 Text(
@@ -1124,10 +1139,23 @@ internal fun SettingsNavigationRow(
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
     val shape = segmentedGroupShape(first, last, pressed)
+    val cardStyle = Settings.shared.surfaceCardStyle
     val containerColor by animateColorAsState(
-        if (pressed) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surfaceContainer,
+        when {
+            cardStyle == SurfaceCardStyle.OUTLINED || cardStyle == SurfaceCardStyle.FLAT ->
+                if (pressed) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent
+            pressed -> MaterialTheme.colorScheme.surfaceContainerHighest
+            else -> MaterialTheme.colorScheme.surfaceContainer
+        },
         label = "settingsRootRow",
     )
+    val rowBorder =
+        when (cardStyle) {
+            SurfaceCardStyle.OUTLINED -> Modifier.border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.65f), shape)
+            SurfaceCardStyle.FLAT -> Modifier
+            else -> Modifier.border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), shape)
+        }
+    val badgeShape = RoundedCornerShape(cornerScaledDp(8.dp, 12.dp, rounded = 10.dp, sharp = 4.dp, pill = 18.dp))
     Row(
         modifier =
             modifier
@@ -1136,7 +1164,7 @@ internal fun SettingsNavigationRow(
                 .then(focusModifier(shape))
                 .clip(shape)
                 .background(containerColor)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), shape)
+                .then(rowBorder)
                 .focusOutline(shape)
                 .clickable(interactionSource = interactionSource, indication = ripple(), onClick = onClick)
                 .padding(horizontal = 16.dp, vertical = 16.dp),
@@ -1150,7 +1178,7 @@ internal fun SettingsNavigationRow(
                     .size(badgeSize)
                     .then(
                         if (tone != null) {
-                            Modifier.clip(RoundedCornerShape(12.dp)).background(tone.iconContainerColor())
+                            Modifier.clip(badgeShape).background(tone.iconContainerColor())
                         } else {
                             Modifier
                         },
@@ -1219,7 +1247,7 @@ internal fun SettingsItemGroup(
         }
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = horizontalPadding),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(if (Settings.shared.surfaceCardStyle == SurfaceCardStyle.EXPRESSIVE) 4.dp else 8.dp),
         ) {
             group.items.forEachIndexed { index, item ->
                 SettingsItemRow(
@@ -1268,8 +1296,10 @@ private fun SettingsItemRow(
     if (item.control == SettingsControl.CUSTOM) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            shape = connectedShape(first, last, outer = 20.dp, inner = 5.dp),
+            shape = segmentedGroupShape(first, last, pressed = false),
             color = MaterialTheme.colorScheme.settingsRowContainerColor(),
+            shadowElevation = MaterialTheme.colorScheme.settingsRowElevation(),
+            border = MaterialTheme.colorScheme.settingsRowBorder(),
         ) {
             Box(Modifier.alpha(if (item.enabled) 1f else 0.38f)) {
                 item.customContent?.invoke(onSettingValueChanged)
@@ -1307,6 +1337,10 @@ private fun SettingsItemRow(
     val interactive = item.enabled && item.control != SettingsControl.CUSTOM
     var choiceMenuExpanded by remember(item.id) { mutableStateOf(false) }
     var choiceMenuOffset by remember(item.id) { mutableStateOf(IntOffset.Zero) }
+    val rowBorder =
+        MaterialTheme.colorScheme.settingsRowBorder()?.let { stroke ->
+            Modifier.border(stroke, shape)
+        } ?: Modifier
     Box(modifier = Modifier.fillMaxWidth().trackPressPosition { choiceMenuOffset = it.round() }) {
         Row(
             modifier =
@@ -1316,6 +1350,7 @@ private fun SettingsItemRow(
                     .heightIn(min = 72.dp)
                     .clip(shape)
                     .background(background)
+                    .then(rowBorder)
                     .focusOutline(shape)
                     .then(
                         if (item.control == SettingsControl.SWITCH && item.checked != null) {

@@ -109,6 +109,8 @@ import com.metrolist.shared.model.previewAspectRatio
 import com.metrolist.shared.model.previewThumbnailUrl
 import com.metrolist.shared.model.thumbnailAspectRatio
 import com.metrolist.shared.settings.ArtistNameAliases
+import com.metrolist.shared.settings.CurrentSongHighlightStyle
+import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.displayName
 import com.metrolist.shared.settings.displayTitle
 import com.metrolist.shared.state.SongMetadataState
@@ -120,9 +122,9 @@ import com.metrolist.shared.ui.navigation.AlbumArtworkSource
 import com.metrolist.shared.ui.navigation.navigationPageSource
 import com.metrolist.shared.ui.navigation.navigationPopupSource
 import com.metrolist.shared.ui.navigation.rememberAlbumArtworkSource
+import com.metrolist.shared.ui.theme.cornerScaledDp
 import com.metrolist.shared.ui.theme.gridCellInset
 import com.metrolist.shared.ui.theme.gridCellShape
-import com.metrolist.shared.ui.theme.uiEnhanced
 import com.metrolist.shared.ui.utils.artistArtworkShape
 import com.metrolist.shared.ui.utils.carouselCaption
 import com.metrolist.shared.utils.formatDuration
@@ -271,15 +273,21 @@ fun SongListItem(
     val artworkShape = animatedCurrentSongArtworkShape(isCurrent, gridCellShape())
     val artworkRotation by rememberCurrentSongArtworkRotation(isCurrent, isPlaying)
     val numberedArtwork = index != null && !showThumbnail && leadingContent == null
+    val rowShape =
+        if (isCurrent && Settings.shared.currentSongHighlightStyle == CurrentSongHighlightStyle.EXPRESSIVE_PILL) {
+            CircleShape
+        } else {
+            gridCellShape()
+        }
     Row(
         modifier =
             modifier
                 .fillMaxWidth()
                 .heightIn(min = 56.dp)
                 .alpha(if (enabled) 1f else 0.38f)
-                .clip(if (isCurrent) CircleShape else gridCellShape())
+                .clip(rowShape)
                 .background(colors.container)
-                .focusOutline(if (isCurrent) CircleShape else gridCellShape())
+                .focusOutline(rowShape)
                 .currentSongSemantics(isCurrent, isPlaying)
                 .combinedClickable(
                     onClick = {
@@ -492,7 +500,8 @@ fun YTGridItem(
             lineHeight = if (largeText) 16.sp else 12.sp,
             fontWeight = FontWeight.Medium,
         )
-    val artworkCornerRadius = if (carouselItemDrawInfo == null) uiEnhanced(ThumbnailCornerRadius, 12.dp) else CarouselItemCornerRadius
+    val mediaCornerRadius = cornerScaledDp(ThumbnailCornerRadius, 12.dp, rounded = 9.dp, sharp = 4.dp, pill = 20.dp)
+    val artworkCornerRadius = if (carouselItemDrawInfo == null) mediaCornerRadius else CarouselItemCornerRadius
     val inset = if (carouselItemDrawInfo == null) gridCellInset() else 0.dp
     val artworkSize = (imageSize - inset * 2).coerceAtLeast(0.dp)
     val shape =
@@ -500,7 +509,7 @@ fun YTGridItem(
             ?: when (item) {
                 is ArtistItem -> artistArtworkShape(item.id)
                 is PodcastItem -> CircleShape
-                else -> RoundedCornerShape(uiEnhanced(ThumbnailCornerRadius, 12.dp))
+                else -> RoundedCornerShape(mediaCornerRadius)
             }
 
     Column(
@@ -1071,6 +1080,7 @@ fun GridCard(
         horizontalAlignment = if (isArtist) Alignment.CenterHorizontally else Alignment.Start,
     ) {
         Box(Modifier.fillMaxWidth().aspectRatio(1f), contentAlignment = Alignment.Center) {
+            val mediaCornerRadius = cornerScaledDp(ThumbnailCornerRadius, 12.dp, rounded = 9.dp, sharp = 4.dp, pill = 20.dp)
             Artwork(
                 thumbnail,
                 icon,
@@ -1078,8 +1088,8 @@ fun GridCard(
                 cover = cover,
                 localArtwork = localArtwork,
                 iconSize = 56.dp,
-                cornerRadius = uiEnhanced(ThumbnailCornerRadius, 12.dp),
-                shape = artistId?.let { artistArtworkShape(it) } ?: RoundedCornerShape(uiEnhanced(ThumbnailCornerRadius, 12.dp)),
+                cornerRadius = mediaCornerRadius,
+                shape = artistId?.let { artistArtworkShape(it) } ?: RoundedCornerShape(mediaCornerRadius),
                 iconModifier = iconModifier,
                 overlay = artworkOverlay,
                 isPlaylistArtwork = isPlaylistArtwork,

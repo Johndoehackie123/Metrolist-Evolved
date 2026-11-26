@@ -28,6 +28,7 @@ import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.SongShareLink
 import com.metrolist.shared.settings.updateDefaultOpenTab
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
@@ -57,7 +58,13 @@ internal fun SettingsUiRegistryBuilder.registerContentSettings(host: SharedSetti
         id = SettingsPageId.CONTENT,
         title = stringResource(Res.string.settings_content_title),
         subtitle = stringResource(Res.string.settings_content_description),
-        icon = MetrolistIcons.Outlined.Language,
+        icon =
+            styledIcon(
+                settings.iconStyle,
+                MetrolistIcons.Outlined.Language,
+                MetrolistIcons.Filled.Language,
+                MetrolistIcons.Rounded.Language,
+            ),
         tone = SettingsTone.ROSE,
     ) {
         host.onSwitchYouTubeChannel?.let { switchChannel ->

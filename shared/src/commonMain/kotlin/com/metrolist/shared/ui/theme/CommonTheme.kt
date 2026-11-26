@@ -28,6 +28,7 @@ import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.material3.dynamicColorScheme
 import com.materialkolor.score.Score
+import com.metrolist.shared.settings.MotionStyle
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.ThemePaletteStyle
 import com.metrolist.shared.ui.haptics.MetrolistHapticsProvider
@@ -81,6 +82,18 @@ fun resolveThemeSeedColor(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
+fun rememberMetrolistMotionScheme(): MotionScheme {
+    val style = Settings.shared.motionStyle
+    return remember(style) {
+        when (style) {
+            MotionStyle.EXPRESSIVE -> MotionScheme.expressive()
+            MotionStyle.STANDARD, MotionStyle.REDUCED -> MotionScheme.standard()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
 fun MetrolistTheme(
     seedColor: Color = DefaultThemeColor,
     darkTheme: Boolean = false,
@@ -99,14 +112,14 @@ fun MetrolistTheme(
             }
         }
 
-    val motionScheme = remember { MotionScheme.expressive() }
+    val motionScheme = rememberMetrolistMotionScheme()
     val animatedColorScheme = animateColorScheme(colorScheme, motionScheme)
 
     IosAppearanceProvider {
         MaterialExpressiveTheme(
             colorScheme = animatedColorScheme,
             typography = MetrolistTypography(),
-            shapes = MetrolistShapes,
+            shapes = rememberMetrolistShapes(),
             motionScheme = motionScheme,
             content = { MetrolistHapticsProvider(content) },
         )
@@ -119,8 +132,9 @@ fun rememberDynamicColorScheme(
     isDark: Boolean,
 ): ColorScheme {
     val paletteStyle = Settings.shared.themePaletteStyle
-    return remember(seedColor, isDark, paletteStyle) {
-        themeColorScheme(seedColor, isDark, paletteStyle)
+    val contrastLevel = Settings.shared.themeContrastLevel.contrastOverride ?: 0.0
+    return remember(seedColor, isDark, paletteStyle, contrastLevel) {
+        themeColorScheme(seedColor, isDark, paletteStyle, contrastLevel)
     }
 }
 

@@ -186,4 +186,4 @@ actual class ThemeColorExtractor {
 }
 
 @Composable
-internal actual fun rememberReducedMotion(): Boolean = false
+internal actual fun rememberPlatformReducedMotion(): Boolean = false

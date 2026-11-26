@@ -91,9 +91,11 @@ import com.metrolist.shared.generated.resources.crash_updates_installing_descrip
 import com.metrolist.shared.generated.resources.crash_updates_installing_title
 import com.metrolist.shared.generated.resources.crash_updates_last_check
 import com.metrolist.shared.generated.resources.crash_updates_no_updates
+import com.metrolist.shared.generated.resources.crash_updates_open_installer
 import com.metrolist.shared.generated.resources.crash_updates_pending_title
 import com.metrolist.shared.generated.resources.crash_updates_release_unavailable
 import com.metrolist.shared.generated.resources.crash_updates_retry
+import com.metrolist.shared.generated.resources.crash_updates_signature_conflict
 import com.metrolist.shared.generated.resources.crash_updates_size
 import com.metrolist.shared.generated.resources.crash_updates_version
 import com.metrolist.shared.generated.resources.general
@@ -128,6 +130,7 @@ import com.metrolist.shared.generated.resources.updates_nightly_builds_desc
 import com.metrolist.shared.generated.resources.updates_no_updates
 import com.metrolist.shared.generated.resources.updates_notification_settings
 import com.metrolist.shared.generated.resources.updates_notifications
+import com.metrolist.shared.generated.resources.updates_open_installer
 import com.metrolist.shared.generated.resources.updates_pending_title
 import com.metrolist.shared.generated.resources.updates_release_date_age
 import com.metrolist.shared.generated.resources.updates_release_unavailable
@@ -138,6 +141,7 @@ import com.metrolist.shared.generated.resources.updates_share_apk_error
 import com.metrolist.shared.generated.resources.updates_share_app
 import com.metrolist.shared.generated.resources.updates_shizuku_denied
 import com.metrolist.shared.generated.resources.updates_shizuku_unavailable
+import com.metrolist.shared.generated.resources.updates_signature_conflict
 import com.metrolist.shared.generated.resources.updates_size
 import com.metrolist.shared.generated.resources.updates_status_current
 import com.metrolist.shared.generated.resources.updates_title
@@ -497,7 +501,13 @@ fun UpdateDetailsScreen(
     }
 
     LaunchedEffect(state) {
-        val downloaded = state as? AppUpdateState.Downloaded ?: return@LaunchedEffect
+        val downloaded = state as? AppUpdateState.Downloaded
+        if (downloaded == null) {
+            if (state !is AppUpdateState.Downloading) {
+                autoInstallHandled = false
+            }
+            return@LaunchedEffect
+        }
         // A background download installs only once playback stops, so opening this screen must not install it.
         if (!autoInstallHandled && !downloaded.installing && !AppUpdateManager.isBackgroundUpdate(downloaded.release)) {
             autoInstallHandled = true
@@ -521,6 +531,12 @@ fun UpdateDetailsScreen(
                     UpdateFailure.DIGEST -> {
                         stringResource(
                             if (crashRecovery) Res.string.crash_updates_digest_failed else Res.string.updates_digest_failed,
+                        )
+                    }
+
+                    UpdateFailure.SIGNATURE_CONFLICT -> {
+                        stringResource(
+                            if (crashRecovery) Res.string.crash_updates_signature_conflict else Res.string.updates_signature_conflict,
                         )
                     }
 
@@ -618,8 +634,31 @@ fun UpdateDetailsScreen(
                 }
 
                 current is AppUpdateState.Error -> {
+                    val cachedApk = release?.let { AppUpdateManager.cachedApkFile(context, it) }
                     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
-                        if (release != null && current.failure == UpdateFailure.DIGEST) {
+                        if (cachedApk != null && current.failure == UpdateFailure.INSTALL) {
+                            OutlinedButton(
+                                onClick = {
+                                    installerError = !AppUpdateManager.launchSystemPackageInstaller(context, cachedApk)
+                                },
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 16.dp, end = 16.dp, top = 12.dp)
+                                        .heightIn(min = 56.dp),
+                                shapes = ButtonDefaults.shapes(),
+                            ) {
+                                Text(
+                                    stringResource(
+                                        if (crashRecovery) Res.string.crash_updates_open_installer else Res.string.updates_open_installer,
+                                    ),
+                                )
+                            }
+                        }
+                        if (
+                            release != null &&
+                            (current.failure == UpdateFailure.DIGEST || current.failure == UpdateFailure.SIGNATURE_CONFLICT)
+                        ) {
                             OutlinedButton(
                                 onClick = {
                                     scope.launch {

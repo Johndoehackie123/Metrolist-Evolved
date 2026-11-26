@@ -1,0 +1,3 @@
+Metrolist Evolved 14.3.0
+- Fixed Android 14–16 in-app APK updater PendingIntent crash, added persistent release signing key so future updates install without signature conflicts, and added system installer fallback
+- Added Material 3 Expressive Appearance customization: 5 one-tap style presets, corner radius styles, card/list surface styles, artist polygon/circle/squircle/teardrop shapes, icon styles, color contrast, spring motion levels, active song highlight styles, and nav label modes

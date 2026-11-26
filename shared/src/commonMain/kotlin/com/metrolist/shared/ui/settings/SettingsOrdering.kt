@@ -7,9 +7,13 @@ internal fun List<SettingsGroupRegistration>.prioritized(page: SettingsPageId): 
         when (page) {
             SettingsPageId.APPEARANCE -> {
                 listOf(
+                    "presets",
                     "theme",
+                    "shapesAndCards",
+                    "motionAndIcons",
                     "playerAppearance",
                     "tabs",
+                    "libraryGrid",
                     "desktopLayouts",
                     "gestures",
                     "displayDensity",
@@ -55,13 +59,34 @@ internal fun List<SettingsGroupRegistration>.prioritized(page: SettingsPageId): 
                 SettingsPageId.APPEARANCE to "theme" -> {
                     listOf(
                         "themeMode",
+                        "autoPureBlack",
                         "matugen",
                         "materialYou",
                         "themeColor",
                         "dynamicTheme",
                         "paletteStyle",
+                        "contrastLevel",
+                        "uiEnhancements",
                         "fonts",
                         "appIcon",
+                    )
+                }
+
+                SettingsPageId.APPEARANCE to "shapesAndCards" -> {
+                    listOf(
+                        "cornerStyle",
+                        "surfaceCardStyle",
+                        "artistArtworkStyle",
+                        "currentSongHighlightStyle",
+                        "spinningNowPlayingArtwork",
+                        "gridItemSize",
+                    )
+                }
+
+                SettingsPageId.APPEARANCE to "motionAndIcons" -> {
+                    listOf(
+                        "iconStyle",
+                        "motionStyle",
                     )
                 }
 
@@ -71,7 +96,10 @@ internal fun List<SettingsGroupRegistration>.prioritized(page: SettingsPageId): 
                         "showHomeTab",
                         "showSearchTab",
                         "showLibraryTab",
+                        "navLabelVisibility",
                         "slimNavigation",
+                        "floatingNavigation",
+                        "floatingTopBar",
                         "forceBottomNavBar",
                         "voiceSearch",
                     )

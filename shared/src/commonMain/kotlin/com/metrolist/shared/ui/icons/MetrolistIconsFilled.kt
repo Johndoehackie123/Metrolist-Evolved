@@ -13,6 +13,13 @@ object MetrolistIconsFilled {
         )
     }
 
+    val AccountTree: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.AccountTree",
+            pathData = "M600-120v-120H440v-400h-80v120H80v-320h280v120h240v-120h280v320H600v-120h-80v320h80v-120h280v320H600Z",
+        )
+    }
+
     val Add: ImageVector by lazy {
         materialSymbol(
             name = "Filled.Add",
@@ -20,10 +27,24 @@ object MetrolistIconsFilled {
         )
     }
 
+    val AddLink: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.AddLink",
+            pathData = "M680-160v-120H560v-80h120v-120h80v120h120v80H760v120h-80ZM440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm560-40h-80q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480Z",
+        )
+    }
+
     val Album: ImageVector by lazy {
         materialSymbol(
             name = "Filled.Album",
             pathData = "M480-300q75 0 127.5-52.5T660-480q0-75-52.5-127.5T480-660q-75 0-127.5 52.5T300-480q0 75 52.5 127.5T480-300Zm0-140q-17 0-28.5-11.5T440-480q0-17 11.5-28.5T480-520q17 0 28.5 11.5T520-480q0 17-11.5 28.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z",
+        )
+    }
+
+    val Api: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Api",
+            pathData = "m480-400-80-80 80-80 80 80-80 80Zm-85-235L295-735l185-185 185 185-100 100-85-85-85 85ZM225-295 40-480l185-185 100 100-85 85 85 85-100 100Zm510 0L635-395l85-85-85-85 100-100 185 185-185 185ZM480-40 295-225l100-100 85 85 85-85 100 100L480-40Z",
         )
     }
 
@@ -132,6 +153,13 @@ object MetrolistIconsFilled {
         )
     }
 
+    val DirectionsCar: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.DirectionsCar",
+            pathData = "M240-200v40q0 17-11.5 28.5T200-120h-40q-17 0-28.5-11.5T120-160v-320l84-240q6-18 21.5-29t34.5-11h440q19 0 34.5 11t21.5 29l84 240v320q0 17-11.5 28.5T800-120h-40q-17 0-28.5-11.5T720-160v-40H240Zm-8-360h496l-42-120H274l-42 120Zm68 240q25 0 42.5-17.5T360-380q0-25-17.5-42.5T300-440q-25 0-42.5 17.5T240-380q0 25 17.5 42.5T300-320Zm360 0q25 0 42.5-17.5T720-380q0-25-17.5-42.5T660-440q-25 0-42.5 17.5T600-380q0 25 17.5 42.5T660-320Z",
+        )
+    }
+
     val Download: ImageVector by lazy {
         materialSymbol(
             name = "Filled.Download",
@@ -157,6 +185,13 @@ object MetrolistIconsFilled {
         materialSymbol(
             name = "Filled.Edit",
             pathData = "M120-120v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm584-528 56-56-56-56-56 56 56 56Z",
+        )
+    }
+
+    val Equalizer: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Equalizer",
+            pathData = "M160-160v-320h160v320H160Zm240 0v-640h160v640H400Zm240 0v-440h160v440H640Z",
         )
     }
 
@@ -199,6 +234,13 @@ object MetrolistIconsFilled {
         materialSymbol(
             name = "Filled.GridView",
             pathData = "M120-520v-320h320v320H120Zm0 400v-320h320v320H120Zm400-400v-320h320v320H520Zm0 400v-320h320v320H520Z",
+        )
+    }
+
+    val Group: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Group",
+            pathData = "M40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm720 0v-120q0-44-24.5-84.5T666-434q51 6 96 20.5t84 35.5q36 20 55 44.5t19 53.5v120H760ZM360-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm400-160q0 66-47 113t-113 47q-11 0-28-2.5t-28-5.5q27-32 41.5-71t14.5-81q0-42-14.5-81T544-792q14-5 28-6.5t28-1.5q66 0 113 47t47 113Z",
         )
     }
 
@@ -248,6 +290,13 @@ object MetrolistIconsFilled {
         materialSymbol(
             name = "Filled.Info",
             pathData = "M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z",
+        )
+    }
+
+    val Language: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Language",
+            pathData = "M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q83 0 155.5 31.5t127 86q54.5 54.5 86 127T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Zm0-82q26-36 45-75t31-83H404q12 44 31 83t45 75Zm-104-16q-18-33-31.5-68.5T322-320H204q29 50 72.5 87t99.5 55Zm208 0q56-18 99.5-55t72.5-87H638q-9 38-22.5 73.5T584-178ZM170-400h136q-3-20-4.5-39.5T300-480q0-21 1.5-40.5T306-560H170q-5 20-7.5 39.5T160-480q0 21 2.5 40.5T170-400Zm216 0h188q3-20 4.5-39.5T580-480q0-21-1.5-40.5T574-560H386q-3 20-4.5 39.5T380-480q0 21 1.5 40.5T386-400Zm268 0h136q5-20 7.5-39.5T800-480q0-21-2.5-40.5T790-560H654q3 20 4.5 39.5T660-480q0 21-1.5 40.5T654-400Zm-16-240h118q-29-50-72.5-87T584-782q18 33 31.5 68.5T638-640Zm-234 0h152q-12-44-31-83t-45-75q-26 36-45 75t-31 83Zm-200 0h118q9-38 22.5-73.5T376-782q-56 18-99.5 55T204-640Z",
         )
     }
 
@@ -318,6 +367,13 @@ object MetrolistIconsFilled {
         materialSymbol(
             name = "Filled.NewReleases",
             pathData = "m344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm136-220q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Z",
+        )
+    }
+
+    val Palette: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Palette",
+            pathData = "M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 32.5-156t88-127Q256-817 330-848.5T488-880q80 0 151 27.5t124.5 76q53.5 48.5 85 115T880-518q0 115-70 176.5T640-280h-74q-9 0-12.5 5t-3.5 11q0 12 15 34.5t15 51.5q0 50-27.5 74T480-80ZM260-440q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120-160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm200 0q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120 160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Z",
         )
     }
 
@@ -433,10 +489,24 @@ object MetrolistIconsFilled {
         )
     }
 
+    val Security: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Security",
+            pathData = "M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q97-30 162-118.5T718-480H480v-315l-240 90v207q0 7 2 18h238v316Z",
+        )
+    }
+
     val Settings: ImageVector by lazy {
         materialSymbol(
             name = "Filled.Settings",
             pathData = "m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z",
+        )
+    }
+
+    val SettingsBackupRestore: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.SettingsBackupRestore",
+            pathData = "M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0 280q-139 0-241-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Z",
         )
     }
 
@@ -496,10 +566,24 @@ object MetrolistIconsFilled {
         )
     }
 
+    val Storage: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Storage",
+            pathData = "M120-160v-160h720v160H120Zm80-40h80v-80h-80v80Zm-80-440v-160h720v160H120Zm80-40h80v-80h-80v80Zm-80 280v-160h720v160H120Zm80-40h80v-80h-80v80Z",
+        )
+    }
+
     val Sync: ImageVector by lazy {
         materialSymbol(
             name = "Filled.Sync",
             pathData = "M160-160v-80h110l-16-14q-49-49-71.5-106.5T160-478q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z",
+        )
+    }
+
+    val TextFields: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.TextFields",
+            pathData = "M280-160v-520H80v-120h520v120H400v520H280Zm360 0v-320H520v-120h360v120H760v320H640Z",
         )
     }
 
@@ -510,10 +594,38 @@ object MetrolistIconsFilled {
         )
     }
 
+    val Token: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Token",
+            pathData = "M364-590 162-703l318-177 318 177-202 113q-23-24-53-37t-63-13q-33 0-63 13t-53 37Zm76 488L120-280v-355l205 115q-3 10-4 19.5t-1 20.5q0 55 33 98t87 57v223Zm40-298q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm40 298v-223q54-14 87-57t33-98q0-11-1-20.5t-4-19.5l205-115v355L520-102Z",
+        )
+    }
+
+    val Translate: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Translate",
+            pathData = "m476-80 182-480h84L924-80h-84l-43-122H603L560-80h-84ZM160-200l-56-56 202-202q-35-35-63.5-80T190-640h84q20 39 40 68t48 58q33-33 68.5-92.5T484-720H40v-80h280v-80h80v80h280v80H564q-21 72-63 148t-83 116l96 98-30 82-122-125-202 201Zm468-72h144l-72-204-72 204Z",
+        )
+    }
+
+    val Tune: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Tune",
+            pathData = "M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z",
+        )
+    }
+
     val Tv: ImageVector by lazy {
         materialSymbol(
             name = "Filled.Tv",
             pathData = "M320-120v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v480q0 33-23.5 56.5T800-200H640v80H320Z",
+        )
+    }
+
+    val Update: ImageVector by lazy {
+        materialSymbol(
+            name = "Filled.Update",
+            pathData = "M480-120q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-480q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q82 0 155.5 35T760-706v-94h80v240H600v-80h110q-41-56-101-88t-129-32q-117 0-198.5 81.5T200-480q0 117 81.5 198.5T480-200q105 0 183.5-68T756-440h82q-15 137-117.5 228.5T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z",
         )
     }
 

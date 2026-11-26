@@ -47,9 +47,10 @@ fun MetrolistTheme(
 ) {
     val colors = if (useDarkTheme) DarkColors else LightColors
 
-    val motionScheme = remember { MotionScheme.expressive() }
+    val motionScheme = rememberMetrolistMotionScheme()
     MaterialExpressiveTheme(
         colorScheme = animateColorScheme(colors, motionScheme),
+        shapes = rememberMetrolistShapes(),
         motionScheme = motionScheme,
         typography = Typography(),
         content = { MetrolistHapticsProvider(content) },

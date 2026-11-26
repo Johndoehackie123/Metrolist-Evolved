@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import com.metrolist.shared.generated.resources.Res
 import com.metrolist.shared.generated.resources.go_back
 import com.metrolist.shared.generated.resources.more_options
+import com.metrolist.shared.settings.Settings
+import com.metrolist.shared.settings.SurfaceCardStyle
 import com.metrolist.shared.ui.icons.MetrolistIcons
 import com.metrolist.shared.ui.navigation.navigationPopupSource
-import com.metrolist.shared.ui.theme.uiEnhanced
+import com.metrolist.shared.ui.theme.cornerScaledDp
 import com.metrolist.shared.ui.tv.tvFocusHighlight
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,9 +50,11 @@ internal fun mediumCollectionArtworkSize(
         contentHeight.coerceAtLeast(0.dp) * 0.4f,
     )
 
-fun collectionCoverShape(): RoundedCornerShape = RoundedCornerShape(uiEnhanced(8.dp, 28.dp))
+fun collectionCoverShape(): RoundedCornerShape =
+    RoundedCornerShape(cornerScaledDp(8.dp, 28.dp, rounded = 18.dp, sharp = 6.dp, pill = 36.dp))
 
-fun collectionInfoCardShape(): RoundedCornerShape = RoundedCornerShape(uiEnhanced(8.dp, 20.dp))
+fun collectionInfoCardShape(): RoundedCornerShape =
+    RoundedCornerShape(cornerScaledDp(8.dp, 20.dp, rounded = 14.dp, sharp = 6.dp, pill = 28.dp))
 
 @Composable
 internal fun CollectionHeader(
@@ -75,11 +79,17 @@ internal fun CollectionHeader(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                artwork(Modifier.size(mediumArtworkSize), uiEnhanced(8.dp, 16.dp))
+                artwork(
+                    Modifier.size(mediumArtworkSize),
+                    cornerScaledDp(8.dp, 16.dp, rounded = 12.dp, sharp = 6.dp, pill = 24.dp),
+                )
                 CollectionInfoCard(Modifier.weight(1f), content)
             }
         } else {
-            artwork(Modifier.fillMaxWidth().aspectRatio(1f), uiEnhanced(8.dp, if (isWide) 20.dp else 28.dp))
+            artwork(
+                Modifier.fillMaxWidth().aspectRatio(1f),
+                cornerScaledDp(8.dp, if (isWide) 20.dp else 28.dp, rounded = 16.dp, sharp = 6.dp, pill = 34.dp),
+            )
             Spacer(Modifier.height(16.dp))
             CollectionInfoCard(content = content)
         }
@@ -95,11 +105,24 @@ fun CollectionInfoCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val cardStyle = Settings.shared.surfaceCardStyle
+    val containerColor =
+        when (cardStyle) {
+            SurfaceCardStyle.OUTLINED, SurfaceCardStyle.FLAT -> MaterialTheme.colorScheme.surface
+            else -> MaterialTheme.colorScheme.surfaceContainerHigh
+        }
+    val border =
+        when (cardStyle) {
+            SurfaceCardStyle.OUTLINED -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
+            SurfaceCardStyle.FLAT -> null
+            else -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
+        }
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = collectionInfoCardShape(),
-        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)),
+        color = containerColor,
+        shadowElevation = if (cardStyle == SurfaceCardStyle.ELEVATED) 3.dp else 0.dp,
+        border = border,
     ) {
         Column(modifier = Modifier.padding(18.dp), content = content)
     }

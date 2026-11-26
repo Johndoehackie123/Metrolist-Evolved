@@ -264,7 +264,7 @@ android {
         applicationId = "com.metrolist.music.evolved"
         minSdk = 24
         targetSdk = 37
-        versionCode = 157
+        versionCode = 158
         versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

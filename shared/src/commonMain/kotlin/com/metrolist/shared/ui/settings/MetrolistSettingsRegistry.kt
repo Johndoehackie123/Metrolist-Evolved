@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.metrolist.shared.generated.resources.*
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -168,74 +169,86 @@ fun rememberMetrolistSettingsRegistry(
         }
     }
 
+    val iconStyle = Settings.shared.iconStyle
+
     customPage(
         SettingsPageId.EQUALIZER,
         stringResource(Res.string.metroeq),
         stringResource(Res.string.settings_equalizer_overview),
-        MetrolistIcons.Outlined.BarChart,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.BarChart, MetrolistIcons.Filled.BarChart, MetrolistIcons.Rounded.BarChart),
         SettingsTone.PURPLE,
     )
     customPage(
         SettingsPageId.ANDROID_AUTO,
         stringResource(Res.string.android_auto_title),
         stringResource(Res.string.settings_android_auto_overview),
-        MetrolistIcons.Outlined.Settings,
+        styledIcon(
+            iconStyle,
+            MetrolistIcons.Outlined.DirectionsCar,
+            MetrolistIcons.Filled.DirectionsCar,
+            MetrolistIcons.Rounded.DirectionsCar,
+        ),
         SettingsTone.ORANGE,
     )
     customPage(
         SettingsPageId.STORAGE,
         stringResource(Res.string.storage),
         host.storageSummary,
-        MetrolistIcons.Outlined.Storage,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.Storage, MetrolistIcons.Filled.Storage, MetrolistIcons.Rounded.Storage),
         SettingsTone.GOLD,
     )
     customPage(
         SettingsPageId.BACKUP_RESTORE,
         stringResource(Res.string.backup_restore_title),
         stringResource(Res.string.settings_backup_restore_description),
-        MetrolistIcons.Outlined.SettingsBackupRestore,
+        styledIcon(
+            iconStyle,
+            MetrolistIcons.Outlined.SettingsBackupRestore,
+            MetrolistIcons.Filled.SettingsBackupRestore,
+            MetrolistIcons.Rounded.SettingsBackupRestore,
+        ),
         SettingsTone.GOLD,
     )
     customPage(
         SettingsPageId.UPDATES,
         stringResource(Res.string.settings_updates_title),
         settingsPageSubtitle(stringResource(Res.string.settings_updates_overview), host.updateSummary),
-        MetrolistIcons.Outlined.Update,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.Update, MetrolistIcons.Filled.Update, MetrolistIcons.Rounded.Update),
         SettingsTone.GREEN,
     )
     customPage(
         SettingsPageId.DEVTOOLS,
         stringResource(Res.string.devtools_title),
         stringResource(Res.string.settings_devtools_overview),
-        MetrolistIcons.Outlined.Settings,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.Settings, MetrolistIcons.Filled.Settings, MetrolistIcons.Rounded.Settings),
         SettingsTone.NEUTRAL,
     )
     customPage(
         SettingsPageId.ABOUT,
         stringResource(Res.string.settings_about_title),
         stringResource(Res.string.settings_about_overview),
-        MetrolistIcons.Outlined.Info,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.Info, MetrolistIcons.Filled.Info, MetrolistIcons.Rounded.Info),
         SettingsTone.PURPLE,
     )
     customPage(
         SettingsPageId.UPDATE_DETAILS,
         stringResource(Res.string.updates_title),
         stringResource(Res.string.settings_release_overview),
-        MetrolistIcons.Outlined.Update,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.Update, MetrolistIcons.Filled.Update, MetrolistIcons.Rounded.Update),
         SettingsTone.NEUTRAL,
     )
     customPage(
         SettingsPageId.PLAYBACK_BENCHMARK,
         stringResource(Res.string.devtools_playback_benchmark_title),
         stringResource(Res.string.devtools_playback_benchmark_description),
-        MetrolistIcons.Outlined.Settings,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.Settings, MetrolistIcons.Filled.Settings, MetrolistIcons.Rounded.Settings),
         SettingsTone.NEUTRAL,
     )
     customPage(
         SettingsPageId.SUPPORTED_LINKS,
         stringResource(Res.string.settings_open_supported_links_title),
         stringResource(Res.string.settings_supported_links_overview),
-        MetrolistIcons.Outlined.AddLink,
+        styledIcon(iconStyle, MetrolistIcons.Outlined.AddLink, MetrolistIcons.Filled.AddLink, MetrolistIcons.Rounded.AddLink),
         SettingsTone.BLUE,
     )
 

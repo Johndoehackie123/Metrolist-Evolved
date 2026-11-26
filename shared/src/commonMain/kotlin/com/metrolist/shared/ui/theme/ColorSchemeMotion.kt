@@ -13,6 +13,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.MotionDurationScale
 import androidx.compose.ui.graphics.lerp
+import com.metrolist.shared.settings.MotionStyle
+import com.metrolist.shared.settings.Settings
 
 @Composable
 fun animateColorScheme(
@@ -104,4 +106,8 @@ internal fun interpolateColorScheme(
     }
 
 @Composable
-internal expect fun rememberReducedMotion(): Boolean
+internal fun rememberReducedMotion(): Boolean =
+    Settings.shared.motionStyle == MotionStyle.REDUCED || rememberPlatformReducedMotion()
+
+@Composable
+internal expect fun rememberPlatformReducedMotion(): Boolean
