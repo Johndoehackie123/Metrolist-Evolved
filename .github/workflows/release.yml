@@ -126,6 +126,7 @@ jobs:
   # x64 desktop packages are native images; ARM64 and macOS keep the JVM runtime.
   windows-native:
     name: Windows x64
+    if: github.repository_owner == 'MetrolistGroup'
     needs: prepare
     uses: ./.github/workflows/reusable-desktop-native.yml
     permissions:
@@ -144,6 +145,7 @@ jobs:
 
   windows:
     name: Windows
+    if: github.repository_owner == 'MetrolistGroup'
     needs: prepare
     uses: ./.github/workflows/reusable-desktop-windows.yml
     permissions:
@@ -164,6 +166,7 @@ jobs:
 
   linux-native:
     name: Linux x64
+    if: github.repository_owner == 'MetrolistGroup'
     needs: prepare
     uses: ./.github/workflows/reusable-desktop-native.yml
     permissions:
@@ -182,6 +185,7 @@ jobs:
 
   linux:
     name: Linux
+    if: github.repository_owner == 'MetrolistGroup'
     needs: prepare
     uses: ./.github/workflows/reusable-desktop-linux.yml
     permissions:
@@ -244,6 +248,7 @@ jobs:
 
   windows-manager:
     name: Windows manager
+    if: github.repository_owner == 'MetrolistGroup'
     needs: [prepare, windows-native]
     uses: ./.github/workflows/reusable-windows-manager.yml
     permissions:
@@ -260,11 +265,11 @@ jobs:
       needs.prepare.result == 'success' &&
       needs.android.result == 'success' &&
       needs.android-izzy.result == 'success' &&
-      needs.windows-native.result == 'success' &&
-      needs.windows.result == 'success' &&
-      needs.windows-manager.result == 'success' &&
-      needs.linux-native.result == 'success' &&
-      needs.linux.result == 'success' &&
+      (needs.windows-native.result == 'success' || needs.windows-native.result == 'skipped') &&
+      (needs.windows.result == 'success' || needs.windows.result == 'skipped') &&
+      (needs.windows-manager.result == 'success' || needs.windows-manager.result == 'skipped') &&
+      (needs.linux-native.result == 'success' || needs.linux-native.result == 'skipped') &&
+      (needs.linux.result == 'success' || needs.linux.result == 'skipped') &&
       (needs.macos.result == 'success' || needs.macos.result == 'skipped') &&
       (needs.ios.result == 'success' || needs.ios.result == 'skipped')
     needs:
@@ -307,15 +312,21 @@ jobs:
         run: |
           set -euo pipefail
           # Native packages keep the stable names the updater, manager and package recipes download.
-          mv \
-            "release-assets/metrolist-desktop-native-windows-x64-${APP_VERSION}.zip" \
-            release-assets/Metrolist-Desktop-windows.zip
-          mv \
-            "release-assets/metrolist-desktop-native-linux-x64-${APP_VERSION}.AppImage" \
-            "release-assets/metrolist-desktop-linux-x64-${APP_VERSION}.AppImage"
-          mv \
-            release-assets/Metrolist-Desktop-Windows-arm64.zip \
-            "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
+          if [[ -f "release-assets/metrolist-desktop-native-windows-x64-${APP_VERSION}.zip" ]]; then
+            mv \
+              "release-assets/metrolist-desktop-native-windows-x64-${APP_VERSION}.zip" \
+              release-assets/Metrolist-Desktop-windows.zip
+          fi
+          if [[ -f "release-assets/metrolist-desktop-native-linux-x64-${APP_VERSION}.AppImage" ]]; then
+            mv \
+              "release-assets/metrolist-desktop-native-linux-x64-${APP_VERSION}.AppImage" \
+              "release-assets/metrolist-desktop-linux-x64-${APP_VERSION}.AppImage"
+          fi
+          if [[ -f release-assets/Metrolist-Desktop-Windows-arm64.zip ]]; then
+            mv \
+              release-assets/Metrolist-Desktop-Windows-arm64.zip \
+              "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
+          fi
           # Legacy v13 GMS builds only update from this asset name; the app has one variant.
           cp release-assets/Metrolist.apk release-assets/Metrolist-with-Google-Cast.apk
           if [[ -f release-assets/Metrolist.ipa ]]; then
@@ -327,16 +338,16 @@ jobs:
             "release-assets/Metrolist-with-Google-Cast.apk"
             "release-assets/Metrolist-izzy.apk"
             "release-assets/Metrolist-KMP-mapping.txt"
-            "release-assets/Metrolist-Desktop-windows.zip"
-            "release-assets/metrolist-installer-windows-x64-${APP_VERSION}.exe"
-            "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
-            "release-assets/metrolist-desktop-linux-x64-${APP_VERSION}.AppImage"
-            "release-assets/metrolist-desktop-linux-arm64-${APP_VERSION}.AppImage"
           )
           if [[ "$GITHUB_REPOSITORY" == "MetrolistGroup/Metrolist" ]]; then
             expected+=(
               "release-assets/Metrolist.ipa"
               "release-assets/metrolist-altstore.json"
+              "release-assets/Metrolist-Desktop-windows.zip"
+              "release-assets/metrolist-installer-windows-x64-${APP_VERSION}.exe"
+              "release-assets/metrolist-desktop-windows-arm64-${APP_VERSION}.zip"
+              "release-assets/metrolist-desktop-linux-x64-${APP_VERSION}.AppImage"
+              "release-assets/metrolist-desktop-linux-arm64-${APP_VERSION}.AppImage"
               "release-assets/metrolist-desktop-macos-arm64-${APP_VERSION}.dmg"
               "release-assets/metrolist-desktop-macos-x64-${APP_VERSION}.dmg"
             )
