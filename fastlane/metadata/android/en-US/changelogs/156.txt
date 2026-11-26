@@ -1,0 +1,6 @@
+Metrolist Evolved 14.1.0 brings Material 3 Expressive UI refinements and connects in-app updates to Johndoehackie123/Metrolist-Evolved.
+
+• Connected Android, Desktop and iOS release checks to Metrolist-Evolved
+• Refined Material 3 Expressive shapes, tonal contrast and subtle surface borders
+• Polished floating top bar, expressive mini player, filter chips and genre cards
+• Enhanced Update Info segmented tiles and About screen cards
