@@ -30,13 +30,13 @@ on:
       SENTRY_AUTH_TOKEN:
         required: false
       LASTFM_API_KEY:
-        required: true
+        required: false
       LASTFM_SECRET:
-        required: true
+        required: false
       LYPRIO_BASE_URL:
-        required: true
+        required: false
       LYPRIO_HMAC_KEY:
-        required: true
+        required: false
 
 permissions:
   contents: read
@@ -57,10 +57,11 @@ jobs:
     steps:
       - name: Validate Sentry configuration
         if: inputs.upload-sentry
+        id: sentry
         shell: bash
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: test -n "$SENTRY_AUTH_TOKEN" || { echo "SENTRY_AUTH_TOKEN is required when Sentry upload is enabled" >&2; exit 1; }
+        run: echo "available=$([[ -n "$SENTRY_AUTH_TOKEN" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
       - name: Set native output directory and version
         shell: bash
@@ -170,7 +171,7 @@ jobs:
             --image "$NATIVE_WORK/image" --output "$NATIVE_WORK/packages"
 
       - name: Upload desktop Sentry source context
-        if: inputs.upload-sentry
+        if: inputs.upload-sentry && steps.sentry.outputs.available == 'true'
         uses: ./.github/actions/upload-desktop-sentry
         with:
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}

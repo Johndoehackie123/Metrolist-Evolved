@@ -71,7 +71,7 @@ jobs:
 
       - name: Require prior verification
         # Maintainers can skip the gate for an urgent release by setting this repository variable.
-        if: vars.SKIP_RELEASE_VERIFICATION != 'true'
+        if: vars.SKIP_RELEASE_VERIFICATION != 'true' && github.repository_owner == 'MetrolistGroup'
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 .github/scripts/release_verification.py
@@ -396,6 +396,7 @@ jobs:
 
   distribution:
     name: Generate distribution recipes
+    if: github.repository == 'MetrolistGroup/Metrolist'
     needs: [prepare, publish]
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -536,6 +537,7 @@ jobs:
 
   flatpark:
     name: Notify flatpark
+    if: github.repository_owner == 'MetrolistGroup'
     needs: publish
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -551,6 +553,7 @@ jobs:
   # Each package repository keeps its update logic in a reusable workflow and pushes with its own deploy key.
   homebrew:
     name: Update the Homebrew tap
+    if: github.repository_owner == 'MetrolistGroup'
     needs: publish
     permissions:
       contents: read
@@ -560,6 +563,7 @@ jobs:
 
   scoop:
     name: Update the Scoop bucket
+    if: github.repository_owner == 'MetrolistGroup'
     needs: publish
     permissions:
       contents: read

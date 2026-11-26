@@ -44,13 +44,13 @@ on:
       SENTRY_AUTH_TOKEN:
         required: false
       LASTFM_API_KEY:
-        required: true
+        required: false
       LASTFM_SECRET:
-        required: true
+        required: false
       LYPRIO_BASE_URL:
-        required: true
+        required: false
       LYPRIO_HMAC_KEY:
-        required: true
+        required: false
 
 jobs:
   package:
@@ -72,6 +72,7 @@ jobs:
           persist-credentials: false
 
       - name: Validate release credentials
+        id: sentry
         shell: bash
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -80,11 +81,10 @@ jobs:
           LYPRIO_HMAC_KEY: ${{ secrets.LYPRIO_HMAC_KEY }}
         run: |
           set -euo pipefail
-          if [[ "$UPLOAD_SENTRY" == "true" ]]; then
-            test -n "$SENTRY_AUTH_TOKEN" || { echo "SENTRY_AUTH_TOKEN is required when Sentry upload is enabled" >&2; exit 1; }
+          echo "available=$([[ "$UPLOAD_SENTRY" == "true" && -n "$SENTRY_AUTH_TOKEN" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          if [[ -z "$LYPRIO_BASE_URL" || -z "$LYPRIO_HMAC_KEY" ]]; then
+            echo "Notice: LYPRIO credentials not configured; building without bundled Lyprio keys"
           fi
-          test -n "$LYPRIO_BASE_URL" || { echo "LYPRIO_BASE_URL is required" >&2; exit 1; }
-          test -n "$LYPRIO_HMAC_KEY" || { echo "LYPRIO_HMAC_KEY is required" >&2; exit 1; }
 
       - name: Prepare CI Gradle
         uses: ./.github/actions/prepare-ci-gradle
@@ -195,7 +195,7 @@ jobs:
 
       - name: Upload desktop Sentry source context
         # JVM sources are the same for both architectures.
-        if: inputs.upload-sentry && matrix.arch == 'x64'
+        if: inputs.upload-sentry && matrix.arch == 'x64' && steps.sentry.outputs.available == 'true'
         uses: ./.github/actions/upload-desktop-sentry
         with:
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
