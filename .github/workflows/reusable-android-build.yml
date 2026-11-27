@@ -220,8 +220,9 @@ jobs:
           if ! ./gradlew "${tasks[@]}" --no-daemon --max-workers="$(nproc)" \
             "-Dorg.gradle.jvmargs=-Xmx8g -XX:MaxMetaspaceSize=1g -XX:+UseParallelGC -Dfile.encoding=UTF-8" \
             "${extra_args[@]}" > >(tee "$log") 2> >(tee -a "$log" >&2); then
-            summary="$(grep -E '(FAILURE:|> Task .* FAILED|\* What went wrong:|  > |e: |\.kt:[0-9]+:[0-9]+:|Exception|FAILED$|Error:)' "$log" | tail -n 35 | tr '\n' ' ' | head -c 2500 || true)"
-            echo "::error title=Android build failed::${summary} || TAIL: $(tail -n 30 "$log" | tr '\n' ' ' | head -c 1500)"
+            ktlint_details="$(cat androidApp/build/reports/ktlint/*/*.txt shared/build/reports/ktlint/*/*.txt 2>/dev/null | tr '\n' ' ' | head -c 1500 || true)"
+            err_lines="$(grep -E '^(e: |> Task .* FAILED|FAILURE:|\* What went wrong:|  > |.*Exception|.*FAILED$|Error:)' "$log" | head -c 2200 | tr '\n' ' ' || true)"
+            echo "::error title=Android build failed::ERRORS: ${err_lines} || KTLINT: ${ktlint_details}"
             exit 1
           fi
 

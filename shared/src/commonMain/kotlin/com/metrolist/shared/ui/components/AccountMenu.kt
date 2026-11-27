@@ -499,10 +499,17 @@ private fun AccountMenuHero(
     val heroShape = segmentedGroupShape(isFirst = true, isLast = false, pressed = false)
     val avatarShape =
         when {
-            !Settings.shared.uiEnhancements || Settings.shared.artistArtworkStyle == ArtistArtworkStyle.CIRCLE -> CircleShape
-            Settings.shared.artistArtworkStyle == ArtistArtworkStyle.ROUNDED_SQUARE ->
+            !Settings.shared.uiEnhancements || Settings.shared.artistArtworkStyle == ArtistArtworkStyle.CIRCLE -> {
+                CircleShape
+            }
+
+            Settings.shared.artistArtworkStyle == ArtistArtworkStyle.ROUNDED_SQUARE -> {
                 RoundedCornerShape(cornerScaledDp(12.dp, 20.dp, rounded = 16.dp, sharp = 6.dp, pill = 26.dp))
-            else -> MaterialShapes.Cookie9Sided.toPolygonShape()
+            }
+
+            else -> {
+                MaterialShapes.Cookie9Sided.toPolygonShape()
+            }
         }
     val reveal = remember { Animatable(0f) }
     val spatial = MaterialTheme.motionScheme.slowSpatialSpec<Float>()

@@ -39,9 +39,11 @@ fun rememberMetrolistShapes(): Shapes {
             )
         } else {
             when (cornerStyle) {
-                CornerStyle.EXPRESSIVE -> MetrolistShapes
+                CornerStyle.EXPRESSIVE -> {
+                    MetrolistShapes
+                }
 
-                CornerStyle.ROUNDED ->
+                CornerStyle.ROUNDED -> {
                     Shapes(
                         extraSmall = RoundedCornerShape(8.dp),
                         small = RoundedCornerShape(12.dp),
@@ -49,8 +51,9 @@ fun rememberMetrolistShapes(): Shapes {
                         large = RoundedCornerShape(20.dp),
                         extraLarge = RoundedCornerShape(28.dp),
                     )
+                }
 
-                CornerStyle.SHARP ->
+                CornerStyle.SHARP -> {
                     Shapes(
                         extraSmall = RoundedCornerShape(4.dp),
                         small = RoundedCornerShape(6.dp),
@@ -58,8 +61,9 @@ fun rememberMetrolistShapes(): Shapes {
                         large = RoundedCornerShape(10.dp),
                         extraLarge = RoundedCornerShape(12.dp),
                     )
+                }
 
-                CornerStyle.PILL ->
+                CornerStyle.PILL -> {
                     Shapes(
                         extraSmall = RoundedCornerShape(20.dp),
                         small = RoundedCornerShape(26.dp),
@@ -67,6 +71,7 @@ fun rememberMetrolistShapes(): Shapes {
                         large = RoundedCornerShape(38.dp),
                         extraLarge = RoundedCornerShape(44.dp),
                     )
+                }
             }
         }
     }

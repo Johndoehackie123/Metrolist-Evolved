@@ -167,16 +167,29 @@ private fun navIcons(navId: String): Pair<ImageVector, ImageVector> {
     val style = Settings.shared.iconStyle
     val (outlined, filled, rounded) =
         when (navId) {
-            NavigationId.HOME -> Triple(MetrolistIcons.Outlined.Home, MetrolistIcons.Default.Home, MetrolistIcons.Rounded.Home)
-            NavigationId.LIBRARY ->
+            NavigationId.HOME -> {
+                Triple(MetrolistIcons.Outlined.Home, MetrolistIcons.Default.Home, MetrolistIcons.Rounded.Home)
+            }
+
+            NavigationId.LIBRARY -> {
                 Triple(MetrolistIcons.Outlined.LibraryMusic, MetrolistIcons.Default.LibraryMusic, MetrolistIcons.Rounded.LibraryMusic)
-            NavigationId.HISTORY ->
+            }
+
+            NavigationId.HISTORY -> {
                 Triple(MetrolistIcons.Outlined.MusicHistory, MetrolistIcons.Filled.MusicHistory, MetrolistIcons.Rounded.MusicHistory)
-            NavigationId.STATISTICS ->
+            }
+
+            NavigationId.STATISTICS -> {
                 Triple(MetrolistIcons.Outlined.SsidChart, MetrolistIcons.Filled.SsidChart, MetrolistIcons.Rounded.SsidChart)
-            NavigationId.LISTEN_TOGETHER ->
+            }
+
+            NavigationId.LISTEN_TOGETHER -> {
                 Triple(MetrolistIcons.Outlined.Group, MetrolistIcons.Filled.Groups, MetrolistIcons.Rounded.Group)
-            else -> Triple(MetrolistIcons.Default.QuestionMark, MetrolistIcons.Default.QuestionMark, MetrolistIcons.Rounded.QuestionMark)
+            }
+
+            else -> {
+                Triple(MetrolistIcons.Default.QuestionMark, MetrolistIcons.Default.QuestionMark, MetrolistIcons.Rounded.QuestionMark)
+            }
         }
     return styledIcon(style, outlined, filled, rounded, selected = false) to
         styledIcon(style, outlined, filled, rounded, selected = true)

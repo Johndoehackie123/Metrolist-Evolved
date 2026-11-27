@@ -1142,10 +1142,17 @@ internal fun SettingsNavigationRow(
     val cardStyle = Settings.shared.surfaceCardStyle
     val containerColor by animateColorAsState(
         when {
-            cardStyle == SurfaceCardStyle.OUTLINED || cardStyle == SurfaceCardStyle.FLAT ->
+            cardStyle == SurfaceCardStyle.OUTLINED || cardStyle == SurfaceCardStyle.FLAT -> {
                 if (pressed) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent
-            pressed -> MaterialTheme.colorScheme.surfaceContainerHighest
-            else -> MaterialTheme.colorScheme.surfaceContainer
+            }
+
+            pressed -> {
+                MaterialTheme.colorScheme.surfaceContainerHighest
+            }
+
+            else -> {
+                MaterialTheme.colorScheme.surfaceContainer
+            }
         },
         label = "settingsRootRow",
     )

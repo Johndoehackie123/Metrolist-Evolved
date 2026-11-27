@@ -601,7 +601,7 @@ internal enum class AppearancePresetId {
 
 internal fun Settings.matchesAppearancePreset(preset: AppearancePresetId): Boolean =
     when (preset) {
-        AppearancePresetId.EXPRESSIVE_M3 ->
+        AppearancePresetId.EXPRESSIVE_M3 -> {
             uiEnhancements &&
                 cornerStyle == CornerStyle.EXPRESSIVE &&
                 surfaceCardStyle == SurfaceCardStyle.EXPRESSIVE &&
@@ -610,8 +610,9 @@ internal fun Settings.matchesAppearancePreset(preset: AppearancePresetId): Boole
                 currentSongHighlightStyle == CurrentSongHighlightStyle.EXPRESSIVE_PILL &&
                 motionStyle == MotionStyle.EXPRESSIVE &&
                 spinningNowPlayingArtwork
+        }
 
-        AppearancePresetId.CLASSIC_MATERIAL ->
+        AppearancePresetId.CLASSIC_MATERIAL -> {
             cornerStyle == CornerStyle.ROUNDED &&
                 surfaceCardStyle == SurfaceCardStyle.TONAL &&
                 iconStyle == IconStyle.ROUNDED &&
@@ -619,8 +620,9 @@ internal fun Settings.matchesAppearancePreset(preset: AppearancePresetId): Boole
                 currentSongHighlightStyle == CurrentSongHighlightStyle.ROUNDED_CARD &&
                 motionStyle == MotionStyle.STANDARD &&
                 !spinningNowPlayingArtwork
+        }
 
-        AppearancePresetId.SLEEK_MINIMAL ->
+        AppearancePresetId.SLEEK_MINIMAL -> {
             cornerStyle == CornerStyle.SHARP &&
                 surfaceCardStyle == SurfaceCardStyle.OUTLINED &&
                 iconStyle == IconStyle.OUTLINED &&
@@ -628,18 +630,21 @@ internal fun Settings.matchesAppearancePreset(preset: AppearancePresetId): Boole
                 currentSongHighlightStyle == CurrentSongHighlightStyle.SUBTLE_TINT &&
                 navLabelVisibility == NavLabelVisibility.SELECTED_ONLY &&
                 !spinningNowPlayingArtwork
+        }
 
-        AppearancePresetId.AMOLED_HIGH_CONTRAST ->
+        AppearancePresetId.AMOLED_HIGH_CONTRAST -> {
             themeMode == ThemeMode.PURE_BLACK &&
                 themeContrastLevel == ThemeContrastLevel.HIGH &&
                 surfaceCardStyle == SurfaceCardStyle.OUTLINED &&
                 currentSongHighlightStyle == CurrentSongHighlightStyle.EXPRESSIVE_PILL
+        }
 
-        AppearancePresetId.COMPACT_DENSE ->
+        AppearancePresetId.COMPACT_DENSE -> {
             gridItemSize == GridItemSize.SMALL &&
                 densityScaleFactor == DensityScale.SLIGHTLY_COMPACT.value &&
                 navLabelVisibility == NavLabelVisibility.HIDDEN &&
                 cornerStyle == CornerStyle.ROUNDED
+        }
     }
 
 internal fun Settings.applyAppearancePreset(preset: AppearancePresetId) {

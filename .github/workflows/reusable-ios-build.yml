@@ -143,8 +143,8 @@ jobs:
           xcrun simctl bootstatus "$device" -b
           log="${RUNNER_TEMP:-/tmp}/ios-test.log"
           if ! ./gradlew :shared:iosSimulatorArm64Test --device "$device" -Pmetrolist.sourceRevision= > >(tee "$log") 2> >(tee -a "$log" >&2); then
-            summary="$(grep -E '(FAILURE:|> Task .* FAILED|\* What went wrong:|  > |e: |\.kt:[0-9]+:[0-9]+:|Exception|FAILED$)' "$log" | tail -n 35 | tr '\n' ' ' | head -c 2500 || true)"
-            echo "::error title=iOS test failed::${summary} || TAIL: $(tail -n 30 "$log" | tr '\n' ' ' | head -c 1500)"
+            err_lines="$(grep -E '^(e: |> Task .* FAILED|FAILURE:|\* What went wrong:|  > |.*Exception|.*FAILED$)' "$log" | head -c 2500 | tr '\n' ' ' || true)"
+            echo "::error title=iOS test failed::ERRORS: ${err_lines}"
             exit 1
           fi
 

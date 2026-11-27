@@ -76,20 +76,24 @@ private val artistArtworkPolygons =
 fun artistArtworkShape(seed: String): Shape {
     if (!Settings.shared.uiEnhancements) return CircleShape
     return when (Settings.shared.artistArtworkStyle) {
-        ArtistArtworkStyle.CIRCLE -> CircleShape
+        ArtistArtworkStyle.CIRCLE -> {
+            CircleShape
+        }
 
-        ArtistArtworkStyle.ROUNDED_SQUARE ->
+        ArtistArtworkStyle.ROUNDED_SQUARE -> {
             RoundedCornerShape(
                 cornerScaledDp(12.dp, 22.dp, rounded = 16.dp, sharp = 6.dp, pill = 28.dp),
             )
+        }
 
-        ArtistArtworkStyle.TEARDROP ->
+        ArtistArtworkStyle.TEARDROP -> {
             RoundedCornerShape(
                 topStartPercent = 50,
                 topEndPercent = 50,
                 bottomStartPercent = 50,
                 bottomEndPercent = 14,
             )
+        }
 
         ArtistArtworkStyle.EXPRESSIVE_POLYGONS -> {
             val hash = seed.hashCode() and Int.MAX_VALUE

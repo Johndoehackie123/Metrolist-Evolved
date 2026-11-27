@@ -137,7 +137,8 @@ jobs:
             cmd=(./gradlew :desktopApp:assemble --no-daemon -Pmetrolist.sourceRevision=)
           fi
           if ! "${cmd[@]}" > >(tee "$log") 2> >(tee -a "$log" >&2); then
-            summary="$(grep -E '(FAILURE:|> Task .* FAILED|\* What went wrong:|  > |e: |\.kt:[0-9]+:[0-9]+:|Exception|FAILED$)' "$log" | tail -n 35 | tr '\n' ' ' | head -c 2500 || true)"
-            echo "::error title=Desktop verify failed::${summary} || TAIL: $(tail -n 30 "$log" | tr '\n' ' ' | head -c 1500)"
+            ktlint_details="$(cat desktopApp/build/reports/ktlint/*/*.txt shared/build/reports/ktlint/*/*.txt 2>/dev/null | tr '\n' ' ' | head -c 1800 || true)"
+            err_lines="$(grep -E '^(e: |w: |> Task .* FAILED|FAILURE:|\* What went wrong:|  > |.*Exception|.*FAILED$)' "$log" | tr '\n' ' ' | head -c 1800 || true)"
+            echo "::error title=Desktop verify failed::KTLINT: ${ktlint_details} || ERRORS: ${err_lines}"
             exit 1
           fi
