@@ -75,7 +75,7 @@ jobs:
   desktop:
     name: Desktop
     needs: changes
-    if: needs.changes.outputs.desktop == 'true'
+    if: github.repository_owner == 'MetrolistGroup' && needs.changes.outputs.desktop == 'true'
     uses: ./.github/workflows/reusable-desktop-verify.yml
     with:
       compile: ${{ github.event_name != 'push' }}
@@ -91,7 +91,7 @@ jobs:
   ios:
     name: iOS
     needs: changes
-    if: needs.changes.outputs.ios == 'true'
+    if: github.repository_owner == 'MetrolistGroup' && needs.changes.outputs.ios == 'true'
     uses: ./.github/workflows/reusable-ios-build.yml
     with:
       cache-read-only: ${{ github.event_name == 'pull_request' }}
