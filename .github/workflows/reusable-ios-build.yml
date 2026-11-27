@@ -141,12 +141,7 @@ jobs:
           devices = json.load(sys.stdin)["devices"]
           print(next(device["udid"] for runtime, items in devices.items() if ".iOS-" in runtime for device in items if device["name"].startswith("iPhone")))')
           xcrun simctl bootstatus "$device" -b
-          log="${RUNNER_TEMP:-/tmp}/ios-test.log"
-          if ! ./gradlew :shared:iosSimulatorArm64Test --device "$device" -Pmetrolist.sourceRevision= > >(tee "$log") 2> >(tee -a "$log" >&2); then
-            err_lines="$(grep -E '^(e: |> Task .* FAILED|FAILURE:|\* What went wrong:|  > |.*Exception|.*FAILED$)' "$log" | head -c 2500 | tr '\n' ' ' || true)"
-            echo "::error title=iOS test failed::ERRORS: ${err_lines}"
-            exit 1
-          fi
+          ./gradlew :shared:iosSimulatorArm64Test --device "$device" -Pmetrolist.sourceRevision=
 
       - name: Shut down iOS simulator
         if: always()

@@ -122,7 +122,6 @@ jobs:
             -Dorg.gradle.jvmargs="-XX:MaxRAMPercentage=60.0 -XX:+UseParallelGC -Dfile.encoding=UTF-8"
         run: |
           set -euo pipefail
-          log="${RUNNER_TEMP:-/tmp}/desktop-verify.log"
           if [[ "${{ matrix.arch }}" == "x64" ]]; then
             tasks=(
               :shared:desktopTest :desktopApp:jvmTest :desktopApp:ktlintCheck
@@ -132,13 +131,7 @@ jobs:
             if [[ '${{ inputs.compile }}' == 'true' ]]; then
               tasks+=(:desktopApp:compileKotlinJvm)
             fi
-            cmd=(./gradlew "${tasks[@]}" --no-daemon -Pmetrolist.sourceRevision=)
+            ./gradlew "${tasks[@]}" --no-daemon -Pmetrolist.sourceRevision=
           else
-            cmd=(./gradlew :desktopApp:assemble --no-daemon -Pmetrolist.sourceRevision=)
-          fi
-          if ! "${cmd[@]}" > >(tee "$log") 2> >(tee -a "$log" >&2); then
-            ktlint_details="$(cat desktopApp/build/reports/ktlint/*/*.txt shared/build/reports/ktlint/*/*.txt 2>/dev/null | tr '\n' ' ' | head -c 1800 || true)"
-            err_lines="$(grep -E '^(e: |w: |> Task .* FAILED|FAILURE:|\* What went wrong:|  > |.*Exception|.*FAILED$)' "$log" | tr '\n' ' ' | head -c 1800 || true)"
-            echo "::error title=Desktop verify failed::KTLINT: ${ktlint_details} || ERRORS: ${err_lines}"
-            exit 1
+            ./gradlew :desktopApp:assemble --no-daemon -Pmetrolist.sourceRevision=
           fi

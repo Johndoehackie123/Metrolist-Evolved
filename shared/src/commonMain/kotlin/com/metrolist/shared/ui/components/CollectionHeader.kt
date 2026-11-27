@@ -50,11 +50,9 @@ internal fun mediumCollectionArtworkSize(
         contentHeight.coerceAtLeast(0.dp) * 0.4f,
     )
 
-fun collectionCoverShape(): RoundedCornerShape =
-    RoundedCornerShape(cornerScaledDp(8.dp, 28.dp, rounded = 18.dp, sharp = 6.dp, pill = 36.dp))
+fun collectionCoverShape(): RoundedCornerShape = RoundedCornerShape(cornerScaledDp(8.dp, 28.dp, rounded = 18.dp, sharp = 6.dp, pill = 36.dp))
 
-fun collectionInfoCardShape(): RoundedCornerShape =
-    RoundedCornerShape(cornerScaledDp(8.dp, 20.dp, rounded = 14.dp, sharp = 6.dp, pill = 28.dp))
+fun collectionInfoCardShape(): RoundedCornerShape = RoundedCornerShape(cornerScaledDp(8.dp, 20.dp, rounded = 14.dp, sharp = 6.dp, pill = 28.dp))
 
 @Composable
 internal fun CollectionHeader(

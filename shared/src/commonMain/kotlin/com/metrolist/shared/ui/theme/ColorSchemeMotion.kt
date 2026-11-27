@@ -106,8 +106,7 @@ internal fun interpolateColorScheme(
     }
 
 @Composable
-internal fun rememberReducedMotion(): Boolean =
-    Settings.shared.motionStyle == MotionStyle.REDUCED || rememberPlatformReducedMotion()
+internal fun rememberReducedMotion(): Boolean = Settings.shared.motionStyle == MotionStyle.REDUCED || rememberPlatformReducedMotion()
 
 @Composable
 internal expect fun rememberPlatformReducedMotion(): Boolean

@@ -826,8 +826,11 @@ fun YTListItem(
         Box(
             modifier =
                 Modifier
-                    .then(pageArtwork?.modifier(uiEnhanced(ThumbnailCornerRadius, 12.dp)) ?: Modifier)
-                    .squareArtworkSlot(48.dp, if (currentSong) 1f else item.thumbnailAspectRatio)
+                    .then(
+                        pageArtwork?.modifier(
+                            cornerScaledDp(ThumbnailCornerRadius, 12.dp, rounded = 9.dp, sharp = 4.dp, pill = 20.dp),
+                        ) ?: Modifier,
+                    ).squareArtworkSlot(48.dp, if (currentSong) 1f else item.thumbnailAspectRatio)
                     .graphicsLayer { rotationZ = artworkRotation }
                     .clip(shape)
                     .background(MaterialTheme.colorScheme.secondaryContainer),
