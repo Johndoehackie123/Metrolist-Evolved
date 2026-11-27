@@ -20,15 +20,24 @@ import androidx.compose.ui.Modifier
 import com.metrolist.shared.generated.resources.*
 import com.metrolist.shared.settings.AnimatedCoverResolution
 import com.metrolist.shared.settings.AppLayout
+import com.metrolist.shared.settings.ArtistArtworkStyle
+import com.metrolist.shared.settings.CornerStyle
+import com.metrolist.shared.settings.CurrentSongHighlightStyle
 import com.metrolist.shared.settings.DensityScale
+import com.metrolist.shared.settings.GridItemSize
+import com.metrolist.shared.settings.IconStyle
 import com.metrolist.shared.settings.LibraryGridColumnsRange
 import com.metrolist.shared.settings.MiniPlayerType
+import com.metrolist.shared.settings.MotionStyle
 import com.metrolist.shared.settings.MusicVideoQuality
+import com.metrolist.shared.settings.NavLabelVisibility
 import com.metrolist.shared.settings.PlayerBackgroundStyle
 import com.metrolist.shared.settings.PlayerThumbnailStyle
 import com.metrolist.shared.settings.PlayerType
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.SliderStyle
+import com.metrolist.shared.settings.SurfaceCardStyle
+import com.metrolist.shared.settings.ThemeContrastLevel
 import com.metrolist.shared.settings.ThemeMode
 import com.metrolist.shared.settings.ThemePaletteStyle
 import com.metrolist.shared.settings.YouTubeCanvasMode
@@ -38,6 +47,7 @@ import com.metrolist.shared.settings.isDesktopMac
 import com.metrolist.shared.settings.normalizeDefaultOpenTab
 import com.metrolist.shared.settings.updateDefaultOpenTab
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
@@ -80,13 +90,87 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
             SettingsChoice(ThemePaletteStyle.CONTENT.name, stringResource(Res.string.theme_palette_content)),
         )
     val selectedPalette = paletteChoices.first { it.id == settings.themePaletteStyle.name }.label
+    val contrastChoices =
+        listOf(
+            SettingsChoice(ThemeContrastLevel.SYSTEM.name, stringResource(Res.string.theme_contrast_system)),
+            SettingsChoice(ThemeContrastLevel.STANDARD.name, stringResource(Res.string.theme_contrast_standard)),
+            SettingsChoice(ThemeContrastLevel.MEDIUM.name, stringResource(Res.string.theme_contrast_medium)),
+            SettingsChoice(ThemeContrastLevel.HIGH.name, stringResource(Res.string.theme_contrast_high)),
+        )
+    val cornerChoices =
+        listOf(
+            SettingsChoice(CornerStyle.EXPRESSIVE.name, stringResource(Res.string.corner_style_expressive)),
+            SettingsChoice(CornerStyle.ROUNDED.name, stringResource(Res.string.corner_style_rounded)),
+            SettingsChoice(CornerStyle.SHARP.name, stringResource(Res.string.corner_style_sharp)),
+            SettingsChoice(CornerStyle.PILL.name, stringResource(Res.string.corner_style_pill)),
+        )
+    val cardStyleChoices =
+        listOf(
+            SettingsChoice(SurfaceCardStyle.EXPRESSIVE.name, stringResource(Res.string.card_style_expressive)),
+            SettingsChoice(SurfaceCardStyle.TONAL.name, stringResource(Res.string.card_style_tonal)),
+            SettingsChoice(SurfaceCardStyle.OUTLINED.name, stringResource(Res.string.card_style_outlined)),
+            SettingsChoice(SurfaceCardStyle.ELEVATED.name, stringResource(Res.string.card_style_elevated)),
+            SettingsChoice(SurfaceCardStyle.FLAT.name, stringResource(Res.string.card_style_flat)),
+        )
+    val artistShapeChoices =
+        listOf(
+            SettingsChoice(ArtistArtworkStyle.EXPRESSIVE_POLYGONS.name, stringResource(Res.string.artist_shape_polygons)),
+            SettingsChoice(ArtistArtworkStyle.CIRCLE.name, stringResource(Res.string.artist_shape_circle)),
+            SettingsChoice(ArtistArtworkStyle.ROUNDED_SQUARE.name, stringResource(Res.string.artist_shape_rounded_square)),
+            SettingsChoice(ArtistArtworkStyle.TEARDROP.name, stringResource(Res.string.artist_shape_teardrop)),
+        )
+    val currentSongChoices =
+        listOf(
+            SettingsChoice(CurrentSongHighlightStyle.EXPRESSIVE_PILL.name, stringResource(Res.string.current_song_style_pill)),
+            SettingsChoice(CurrentSongHighlightStyle.ROUNDED_CARD.name, stringResource(Res.string.current_song_style_card)),
+            SettingsChoice(CurrentSongHighlightStyle.SUBTLE_TINT.name, stringResource(Res.string.current_song_style_subtle)),
+        )
+    val iconStyleChoices =
+        listOf(
+            SettingsChoice(IconStyle.EXPRESSIVE.name, stringResource(Res.string.icon_style_expressive)),
+            SettingsChoice(IconStyle.ROUNDED.name, stringResource(Res.string.icon_style_rounded)),
+            SettingsChoice(IconStyle.OUTLINED.name, stringResource(Res.string.icon_style_outlined)),
+            SettingsChoice(IconStyle.FILLED.name, stringResource(Res.string.icon_style_filled)),
+        )
+    val motionStyleChoices =
+        listOf(
+            SettingsChoice(MotionStyle.EXPRESSIVE.name, stringResource(Res.string.motion_style_expressive)),
+            SettingsChoice(MotionStyle.STANDARD.name, stringResource(Res.string.motion_style_standard)),
+            SettingsChoice(MotionStyle.REDUCED.name, stringResource(Res.string.motion_style_reduced)),
+        )
+    val gridItemSizeChoices =
+        listOf(
+            SettingsChoice(GridItemSize.BIG.name, stringResource(Res.string.grid_item_size_large)),
+            SettingsChoice(GridItemSize.SMALL.name, stringResource(Res.string.grid_item_size_compact)),
+        )
+    val navLabelChoices =
+        listOf(
+            SettingsChoice(NavLabelVisibility.ALWAYS.name, stringResource(Res.string.nav_labels_always)),
+            SettingsChoice(NavLabelVisibility.SELECTED_ONLY.name, stringResource(Res.string.nav_labels_selected)),
+            SettingsChoice(NavLabelVisibility.HIDDEN.name, stringResource(Res.string.nav_labels_hidden)),
+        )
     page(
         id = SettingsPageId.APPEARANCE,
         title = stringResource(Res.string.appearance_title),
-        icon = MetrolistIcons.Outlined.Palette,
+        icon =
+            styledIcon(
+                settings.iconStyle,
+                MetrolistIcons.Outlined.Palette,
+                MetrolistIcons.Filled.Palette,
+                MetrolistIcons.Rounded.Palette,
+            ),
         tone = SettingsTone.ORANGE,
         subtitle = stringResource(Res.string.settings_appearance_overview),
     ) {
+        group("presets", stringResource(Res.string.appearance_presets)) {
+            custom(
+                id = "appearancePresets",
+                title = stringResource(Res.string.appearance_presets),
+                description = stringResource(Res.string.appearance_presets_description),
+            ) { onChanged ->
+                AppearancePresetsSetting(onChanged)
+            }
+        }
         group("theme", stringResource(Res.string.appearance_theme)) {
             choice(
                 id = "themeMode",
@@ -96,6 +180,14 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
                 selectedChoiceId = selectedThemeMode.name,
             ) { id ->
                 settings.themeMode = ThemeMode.valueOf(id)
+            }
+            if (selectedThemeMode == ThemeMode.AUTO) {
+                switch(
+                    id = "autoPureBlack",
+                    title = stringResource(Res.string.auto_pure_black),
+                    description = stringResource(Res.string.auto_pure_black_description),
+                    checked = settings.autoPureBlack,
+                ) { settings.autoPureBlack = it }
             }
             val appIconChoices = host.hostChoices[SettingsHostChoice.APP_ICON].orEmpty()
             if (appIconChoices.isNotEmpty()) {
@@ -164,6 +256,15 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
                 description = stringResource(Res.string.settings_palette_style_summary),
                 enabled = !matugenActive,
             ) { settings.themePaletteStyle = ThemePaletteStyle.valueOf(it) }
+            choice(
+                id = "contrastLevel",
+                title = stringResource(Res.string.theme_contrast_level),
+                description = stringResource(Res.string.theme_contrast_level_description),
+                valueLabel = contrastChoices.first { it.id == settings.themeContrastLevel.name }.label,
+                choices = contrastChoices,
+                selectedChoiceId = settings.themeContrastLevel.name,
+                enabled = !matugenActive,
+            ) { settings.themeContrastLevel = ThemeContrastLevel.valueOf(it) }
             if (SettingsPageId.FONTS in host.availablePages) {
                 navigation(
                     id = "fonts",
@@ -172,6 +273,75 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
                     description = stringResource(Res.string.settings_fonts_overview),
                 )
             }
+        }
+        group("shapesAndCards", stringResource(Res.string.appearance_shapes_and_cards)) {
+            choice(
+                id = "cornerStyle",
+                title = stringResource(Res.string.corner_style),
+                description = stringResource(Res.string.corner_style_description),
+                valueLabel = cornerChoices.first { it.id == settings.cornerStyle.name }.label,
+                choices = cornerChoices,
+                selectedChoiceId = settings.cornerStyle.name,
+                enabled = settings.uiEnhancements,
+            ) { settings.cornerStyle = CornerStyle.valueOf(it) }
+            choice(
+                id = "surfaceCardStyle",
+                title = stringResource(Res.string.surface_card_style),
+                description = stringResource(Res.string.surface_card_style_description),
+                valueLabel = cardStyleChoices.first { it.id == settings.surfaceCardStyle.name }.label,
+                choices = cardStyleChoices,
+                selectedChoiceId = settings.surfaceCardStyle.name,
+            ) { settings.surfaceCardStyle = SurfaceCardStyle.valueOf(it) }
+            choice(
+                id = "artistArtworkStyle",
+                title = stringResource(Res.string.artist_artwork_style),
+                description = stringResource(Res.string.artist_artwork_style_description),
+                valueLabel = artistShapeChoices.first { it.id == settings.artistArtworkStyle.name }.label,
+                choices = artistShapeChoices,
+                selectedChoiceId = settings.artistArtworkStyle.name,
+                enabled = settings.uiEnhancements,
+            ) { settings.artistArtworkStyle = ArtistArtworkStyle.valueOf(it) }
+            choice(
+                id = "currentSongHighlightStyle",
+                title = stringResource(Res.string.current_song_highlight_style),
+                description = stringResource(Res.string.current_song_highlight_style_description),
+                valueLabel = currentSongChoices.first { it.id == settings.currentSongHighlightStyle.name }.label,
+                choices = currentSongChoices,
+                selectedChoiceId = settings.currentSongHighlightStyle.name,
+            ) { settings.currentSongHighlightStyle = CurrentSongHighlightStyle.valueOf(it) }
+            switch(
+                id = "spinningNowPlayingArtwork",
+                title = stringResource(Res.string.spinning_now_playing_artwork),
+                description = stringResource(Res.string.spinning_now_playing_artwork_description),
+                checked = settings.spinningNowPlayingArtwork,
+                enabled = settings.uiEnhancements,
+            ) { settings.spinningNowPlayingArtwork = it }
+            choice(
+                id = "gridItemSize",
+                title = stringResource(Res.string.grid_item_size),
+                description = stringResource(Res.string.grid_item_size_description),
+                valueLabel = gridItemSizeChoices.first { it.id == settings.gridItemSize.name }.label,
+                choices = gridItemSizeChoices,
+                selectedChoiceId = settings.gridItemSize.name,
+            ) { settings.gridItemSize = GridItemSize.valueOf(it) }
+        }
+        group("motionAndIcons", stringResource(Res.string.appearance_motion_and_icons)) {
+            choice(
+                id = "iconStyle",
+                title = stringResource(Res.string.icon_style),
+                description = stringResource(Res.string.icon_style_description),
+                valueLabel = iconStyleChoices.first { it.id == settings.iconStyle.name }.label,
+                choices = iconStyleChoices,
+                selectedChoiceId = settings.iconStyle.name,
+            ) { settings.iconStyle = IconStyle.valueOf(it) }
+            choice(
+                id = "motionStyle",
+                title = stringResource(Res.string.motion_style),
+                description = stringResource(Res.string.motion_style_description),
+                valueLabel = motionStyleChoices.first { it.id == settings.motionStyle.name }.label,
+                choices = motionStyleChoices,
+                selectedChoiceId = settings.motionStyle.name,
+            ) { settings.motionStyle = MotionStyle.valueOf(it) }
         }
         if (host.platform == SettingsPlatform.DESKTOP) {
             group("libraryGrid", stringResource(Res.string.library)) {
@@ -447,13 +617,34 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
                     selectedChoiceId = normalized,
                     description = stringResource(Res.string.settings_initial_tab_summary),
                 ) { settings.updateDefaultOpenTab(it) }
+                val effectiveNavLabels =
+                    if (settings.slimNavBar && settings.navLabelVisibility == NavLabelVisibility.ALWAYS) {
+                        NavLabelVisibility.HIDDEN
+                    } else {
+                        settings.navLabelVisibility
+                    }
+                choice(
+                    id = "navLabelVisibility",
+                    title = stringResource(Res.string.nav_label_visibility),
+                    description = stringResource(Res.string.nav_label_visibility_description),
+                    valueLabel = navLabelChoices.first { it.id == effectiveNavLabels.name }.label,
+                    choices = navLabelChoices,
+                    selectedChoiceId = effectiveNavLabels.name,
+                ) {
+                    val chosen = NavLabelVisibility.valueOf(it)
+                    settings.navLabelVisibility = chosen
+                    settings.slimNavBar = chosen == NavLabelVisibility.HIDDEN
+                }
                 switch(
                     id = "slimNavigation",
                     title = stringResource(Res.string.appearance_slim_bottom_nav),
                     description = stringResource(Res.string.appearance_slim_bottom_nav_description),
-                    checked = settings.slimNavBar,
+                    checked = settings.slimNavBar || settings.navLabelVisibility == NavLabelVisibility.HIDDEN,
                     enabled = !settings.floatingNavBar,
-                ) { settings.slimNavBar = it }
+                ) {
+                    settings.slimNavBar = it
+                    settings.navLabelVisibility = if (it) NavLabelVisibility.HIDDEN else NavLabelVisibility.ALWAYS
+                }
                 switch(
                     id = "floatingNavigation",
                     title = stringResource(Res.string.appearance_floating_bottom_nav),
@@ -533,8 +724,8 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
                 ) { settings.swipeToRemoveFromQueue = it }
             }
         }
-        if (host.platform != SettingsPlatform.DESKTOP) {
-            group("misc", stringResource(Res.string.appearance_misc)) {
+        group("misc", stringResource(Res.string.appearance_misc)) {
+            if (host.platform != SettingsPlatform.DESKTOP) {
                 switch(
                     id = "haptics",
                     title = stringResource(Res.string.appearance_enable_haptic_feedback),
@@ -542,6 +733,16 @@ internal fun SettingsUiRegistryBuilder.registerAppearanceSettings(host: SharedSe
                     checked = settings.enableHapticFeedback,
                 ) { settings.enableHapticFeedback = it }
             }
+            action(
+                id = "resetAppearance",
+                title = stringResource(Res.string.reset_appearance_title),
+                description = stringResource(Res.string.reset_appearance_description),
+                confirmationMessage = stringResource(Res.string.reset_appearance_confirm),
+                onClick = {
+                    settings.resetAppearanceSettings()
+                    host.onSeedColorSelected(0L)
+                },
+            )
         }
     }
 

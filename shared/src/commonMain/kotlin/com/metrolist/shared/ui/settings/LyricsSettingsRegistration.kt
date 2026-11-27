@@ -31,6 +31,7 @@ import com.metrolist.shared.settings.PlayerBackgroundStyle
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.components.lyrics.LyricsOffsetEditor
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.mp.KoinPlatform
@@ -59,7 +60,7 @@ internal fun SettingsUiRegistryBuilder.registerLyricsSettings(host: SharedSettin
         id = SettingsPageId.LYRICS,
         title = stringResource(Res.string.lyrics_settings_title),
         subtitle = stringResource(Res.string.settings_lyrics_description),
-        icon = MetrolistIcons.Outlined.Lyrics,
+        icon = styledIcon(settings.iconStyle, MetrolistIcons.Outlined.Lyrics, MetrolistIcons.Filled.Lyrics, MetrolistIcons.Rounded.Lyrics),
         tone = SettingsTone.ROSE,
     ) {
         group("alignment", stringResource(Res.string.lyrics_alignment)) {

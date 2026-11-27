@@ -45,6 +45,7 @@ import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.state.SongLikeState
 import com.metrolist.shared.ui.components.CollectionPreviews
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import com.metrolist.shared.utils.isCrashReportingAvailable
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
@@ -57,7 +58,13 @@ internal fun SettingsUiRegistryBuilder.registerPrivacySettings(host: SharedSetti
         id = SettingsPageId.PRIVACY,
         title = stringResource(Res.string.privacy_settings_title),
         subtitle = stringResource(Res.string.settings_privacy_description),
-        icon = MetrolistIcons.Outlined.Security,
+        icon =
+            styledIcon(
+                settings.iconStyle,
+                MetrolistIcons.Outlined.Security,
+                MetrolistIcons.Filled.Security,
+                MetrolistIcons.Rounded.Security,
+            ),
         tone = SettingsTone.CYAN,
     ) {
         group("history", stringResource(Res.string.history)) {

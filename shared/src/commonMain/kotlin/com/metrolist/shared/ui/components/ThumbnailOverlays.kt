@@ -55,6 +55,7 @@ import com.metrolist.shared.generated.resources.queue_current_paused
 import com.metrolist.shared.generated.resources.queue_current_playing
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.theme.gridCellShape
 import com.metrolist.shared.ui.theme.rememberReducedMotion
 import com.metrolist.shared.ui.utils.settled
 import com.metrolist.shared.ui.utils.toPolygonShape
@@ -69,7 +70,12 @@ internal const val ACTIVE_THUMBNAIL_SCRIM_ALPHA = 0.6f
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun currentSongArtworkShape(): Shape = MaterialShapes.Cookie9Sided.toPolygonShape()
+fun currentSongArtworkShape(): Shape =
+    if (Settings.shared.spinningNowPlayingArtwork && Settings.shared.uiEnhancements) {
+        MaterialShapes.Cookie9Sided.toPolygonShape()
+    } else {
+        gridCellShape()
+    }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -77,6 +83,9 @@ fun animatedCurrentSongArtworkShape(
     isCurrent: Boolean,
     inactiveShape: Shape,
 ): Shape {
+    if (!Settings.shared.spinningNowPlayingArtwork || !Settings.shared.uiEnhancements) {
+        return inactiveShape
+    }
     val progress by animateFloatAsState(
         targetValue = if (isCurrent) 1f else 0f,
         animationSpec = if (rememberReducedMotion()) snap() else MaterialTheme.motionScheme.defaultSpatialSpec(),
@@ -163,9 +172,10 @@ fun rememberCurrentSongArtworkRotation(
     isPlaying: Boolean,
 ): State<Float> {
     val motionScale = rememberCoroutineScope().coroutineContext[MotionDurationScale]?.scaleFactor ?: 1f
+    val spinningEnabled = Settings.shared.spinningNowPlayingArtwork && Settings.shared.uiEnhancements
     return rememberArtworkShapeRotation(
-        spinning = isCurrent && isPlaying,
-        motionEnabled = isCurrent && motionScale > 0f && !rememberReducedMotion(),
+        spinning = isCurrent && isPlaying && spinningEnabled,
+        motionEnabled = isCurrent && spinningEnabled && motionScale > 0f && !rememberReducedMotion(),
     )
 }
 

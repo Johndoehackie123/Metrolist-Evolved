@@ -32,6 +32,9 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.unit.Dp
+import com.metrolist.shared.settings.MotionStyle
+import com.metrolist.shared.settings.Settings
+import com.metrolist.shared.ui.theme.rememberReducedMotion
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 val LocalNavSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
@@ -51,12 +54,18 @@ val LocalNavVisibilityScope = staticCompositionLocalOf<AnimatedVisibilityScope?>
 class NavigationMotion internal constructor(
     private val scheme: MotionScheme,
     val enabled: Boolean = true,
+    private val expressive: Boolean = true,
 ) {
     internal val effectsSpec = scheme.fastEffectsSpec<Float>()
     internal val spatialSpec = scheme.fastSpatialSpec<Float>()
 
     val popupEnter: EnterTransition
-        get() = if (enabled) fadeIn(effectsSpec) + scaleIn(spatialSpec, initialScale = 0.8f) else EnterTransition.None
+        get() =
+            if (enabled) {
+                fadeIn(effectsSpec) + scaleIn(spatialSpec, initialScale = if (expressive) 0.8f else 0.94f)
+            } else {
+                EnterTransition.None
+            }
     val popupExit: ExitTransition
         get() = if (enabled) fadeOut(effectsSpec) else ExitTransition.None
 
@@ -66,17 +75,16 @@ class NavigationMotion internal constructor(
         origin: TransformOrigin = TransformOrigin.Center,
     ): ContentTransform =
         if (enabled) {
+            val useExpressivePattern = expressive && pattern == NavigationPattern.Expressive
             val spatial =
-                if (pattern ==
-                    NavigationPattern.Expressive
-                ) {
-                    MotionScheme.expressive().defaultSpatialSpec<Float>()
+                if (useExpressivePattern) {
+                    scheme.defaultSpatialSpec<Float>()
                 } else {
                     spatialSpec
                 }
-            val enterScale = if (pattern == NavigationPattern.Expressive && !isPop) 0.8f else 0.96f
-            val exitScale = if (pattern == NavigationPattern.Expressive && isPop) 0.8f else 0.96f
-            val pivot = if (pattern == NavigationPattern.Expressive) origin else TransformOrigin.Center
+            val enterScale = if (useExpressivePattern && !isPop) 0.8f else 0.96f
+            val exitScale = if (useExpressivePattern && isPop) 0.8f else 0.96f
+            val pivot = if (useExpressivePattern) origin else TransformOrigin.Center
             (scaleIn(spatial, initialScale = enterScale, transformOrigin = pivot) + fadeIn(effectsSpec))
                 .togetherWith(scaleOut(spatial, targetScale = exitScale, transformOrigin = pivot) + fadeOut(effectsSpec))
         } else {
@@ -93,7 +101,15 @@ class NavigationMotion internal constructor(
 fun rememberNavigationMotion(): NavigationMotion {
     val scheme = MaterialTheme.motionScheme
     val scale = rememberCoroutineScope().coroutineContext[MotionDurationScale]?.scaleFactor ?: 1f
-    return remember(scheme, scale) { NavigationMotion(scheme, scale > 0f) }
+    val reducedMotion = rememberReducedMotion()
+    val motionStyle = Settings.shared.motionStyle
+    return remember(scheme, scale, reducedMotion, motionStyle) {
+        NavigationMotion(
+            scheme = scheme,
+            enabled = scale > 0f && !reducedMotion,
+            expressive = motionStyle == MotionStyle.EXPRESSIVE,
+        )
+    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)

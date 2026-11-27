@@ -27,6 +27,10 @@ open class UpdateInstallReceiver : BroadcastReceiver() {
                 AppUpdateManager.onInstallAborted()
             }
 
+            PackageInstaller.STATUS_FAILURE_CONFLICT -> {
+                AppUpdateManager.onInstallFinished(success = false, conflict = true)
+            }
+
             else -> {
                 AppUpdateManager.onInstallFinished(success = false)
             }

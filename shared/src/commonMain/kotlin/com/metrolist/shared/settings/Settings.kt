@@ -35,6 +35,7 @@ import com.metrolist.shared.constants.AppleMusicArtistCacheJsonKey
 import com.metrolist.shared.constants.AppleMusicArtistImagesKey
 import com.metrolist.shared.constants.AppleMusicArtistVideoResolutionKey
 import com.metrolist.shared.constants.AppleMusicArtistVideosKey
+import com.metrolist.shared.constants.ArtistArtworkStyleKey
 import com.metrolist.shared.constants.ArtistNameAliasesJsonKey
 import com.metrolist.shared.constants.AudioBoostDbKey
 import com.metrolist.shared.constants.AudioTrackPlaybackParamsKey
@@ -57,6 +58,8 @@ import com.metrolist.shared.constants.CastEnabledKey
 import com.metrolist.shared.constants.CastVolumeStepKey
 import com.metrolist.shared.constants.ClassicRecommendationsKey
 import com.metrolist.shared.constants.CollectionCoversKey
+import com.metrolist.shared.constants.CornerStyleKey
+import com.metrolist.shared.constants.CurrentSongHighlightStyleKey
 import com.metrolist.shared.constants.DatabaseLikesRecoveryVersionKey
 import com.metrolist.shared.constants.DefaultOpenTabKey
 import com.metrolist.shared.constants.DeletedPlaylistIdsJsonKey
@@ -102,6 +105,7 @@ import com.metrolist.shared.constants.HidePlaylistRecommendationsKey
 import com.metrolist.shared.constants.HideRecentSearchesKey
 import com.metrolist.shared.constants.HideShortSongsKey
 import com.metrolist.shared.constants.HistoryPlaylistsEnabledKey
+import com.metrolist.shared.constants.IconStyleKey
 import com.metrolist.shared.constants.IosCustomFontFileKey
 import com.metrolist.shared.constants.IosCustomFontNameKey
 import com.metrolist.shared.constants.IosCustomFontRevisionKey
@@ -141,9 +145,11 @@ import com.metrolist.shared.constants.LyricsShowOriginalLyricsKey
 import com.metrolist.shared.constants.LyricsYoutubeCaptionsEnabledKey
 import com.metrolist.shared.constants.MatugenThemeKey
 import com.metrolist.shared.constants.MinimumSongDurationSecondsKey
+import com.metrolist.shared.constants.MotionStyleKey
 import com.metrolist.shared.constants.MusicVideoCacheJsonKey
 import com.metrolist.shared.constants.MusicVideoPlaybackEnabledKey
 import com.metrolist.shared.constants.MusicVideoQualityKey
+import com.metrolist.shared.constants.NavLabelVisibilityKey
 import com.metrolist.shared.constants.PauseOnMuteKey
 import com.metrolist.shared.constants.PendingContinuePlaybackKey
 import com.metrolist.shared.constants.PendingRemoteLibraryRemovalKeysJsonKey
@@ -193,14 +199,17 @@ import com.metrolist.shared.constants.SlimNavBarKey
 import com.metrolist.shared.constants.SongShareLinkKey
 import com.metrolist.shared.constants.SpeedDialArtworkRefreshTimesKey
 import com.metrolist.shared.constants.SpeedDialSurprisePinnedKey
+import com.metrolist.shared.constants.SpinningNowPlayingArtworkKey
 import com.metrolist.shared.constants.SponsorBlockEnabledKey
 import com.metrolist.shared.constants.SupportPromptDismissedKey
 import com.metrolist.shared.constants.SupportPromptLaunchThresholdKey
 import com.metrolist.shared.constants.SupportPromptLaunchesKey
+import com.metrolist.shared.constants.SurfaceCardStyleKey
 import com.metrolist.shared.constants.SwipeToRemoveFromQueueKey
 import com.metrolist.shared.constants.SwipeToRemoveSongKey
 import com.metrolist.shared.constants.SwipeToSongKey
 import com.metrolist.shared.constants.TempoPitchPresetsJsonKey
+import com.metrolist.shared.constants.ThemeContrastLevelKey
 import com.metrolist.shared.constants.TokenLoginWarningDismissedKey
 import com.metrolist.shared.constants.UpdateInstallMethodKey
 import com.metrolist.shared.constants.UseLegacyShuffleKey
@@ -257,6 +266,9 @@ class Settings(
         }
         if (!settings.hasKey("keepScreenOnMode") && settings.getBoolean("keepScreenOn", false)) {
             settings.putInt("keepScreenOnMode", KeepScreenOnMode.PLAYER_AND_LYRICS.ordinal)
+        }
+        if (!settings.hasKey(NavLabelVisibilityKey) && settings.getBoolean(SlimNavBarKey, false)) {
+            settings.putInt(NavLabelVisibilityKey, NavLabelVisibility.HIDDEN.ordinal)
         }
         settings.removeExisting(
             "keepScreenOn",
@@ -347,7 +359,41 @@ class Settings(
     var autoPureBlack by preference(AutoPureBlackKey, false)
     var selectedThemeColor by preference(0L)
     var themePaletteStyle by preference(ThemePaletteStyle.TONAL_SPOT)
+    var themeContrastLevel by preference(ThemeContrastLevelKey, ThemeContrastLevel.SYSTEM)
+    var cornerStyle by preference(CornerStyleKey, CornerStyle.EXPRESSIVE)
+    var surfaceCardStyle by preference(SurfaceCardStyleKey, SurfaceCardStyle.EXPRESSIVE)
+    var iconStyle by preference(IconStyleKey, IconStyle.EXPRESSIVE)
+    var navLabelVisibility by preference(NavLabelVisibilityKey, NavLabelVisibility.ALWAYS)
+    var artistArtworkStyle by preference(ArtistArtworkStyleKey, ArtistArtworkStyle.EXPRESSIVE_POLYGONS)
+    var currentSongHighlightStyle by preference(CurrentSongHighlightStyleKey, CurrentSongHighlightStyle.EXPRESSIVE_PILL)
+    var motionStyle by preference(MotionStyleKey, MotionStyle.EXPRESSIVE)
+    var spinningNowPlayingArtwork by preference(SpinningNowPlayingArtworkKey, true)
     var matugenTheme by preference(MatugenThemeKey, false)
+
+    fun resetAppearanceSettings() {
+        materialYouEnabled = true
+        uiEnhancements = true
+        dynamicTheme = true
+        themeMode = ThemeMode.AUTO
+        autoPureBlack = false
+        selectedThemeColor = 0L
+        themePaletteStyle = ThemePaletteStyle.TONAL_SPOT
+        themeContrastLevel = ThemeContrastLevel.SYSTEM
+        cornerStyle = CornerStyle.EXPRESSIVE
+        surfaceCardStyle = SurfaceCardStyle.EXPRESSIVE
+        iconStyle = IconStyle.EXPRESSIVE
+        navLabelVisibility = NavLabelVisibility.ALWAYS
+        slimNavBar = false
+        artistArtworkStyle = ArtistArtworkStyle.EXPRESSIVE_POLYGONS
+        currentSongHighlightStyle = CurrentSongHighlightStyle.EXPRESSIVE_PILL
+        motionStyle = MotionStyle.EXPRESSIVE
+        spinningNowPlayingArtwork = true
+        gridItemSize = GridItemSize.BIG
+        densityScaleFactor = 1f
+        enableLandscapeScaling = false
+        floatingNavBar = false
+        floatingTopBar = false
+    }
 
     var appFont by preference(FontOption.SYSTEM)
     var androidCustomFontFile by preference(AndroidCustomFontFileKey, "")

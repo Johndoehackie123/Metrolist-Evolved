@@ -11,6 +11,7 @@
 
 package com.metrolist.shared.ui.settings
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -73,9 +74,20 @@ import com.metrolist.shared.api.artwork.CanvasContentSource
 import com.metrolist.shared.api.artwork.isEnabled
 import com.metrolist.shared.generated.resources.*
 import com.metrolist.shared.model.LyricsProvider
+import com.metrolist.shared.settings.ArtistArtworkStyle
+import com.metrolist.shared.settings.CornerStyle
+import com.metrolist.shared.settings.CurrentSongHighlightStyle
+import com.metrolist.shared.settings.DensityScale
+import com.metrolist.shared.settings.GridItemSize
+import com.metrolist.shared.settings.IconStyle
+import com.metrolist.shared.settings.MotionStyle
+import com.metrolist.shared.settings.NavLabelVisibility
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.SliderStyle
+import com.metrolist.shared.settings.SurfaceCardStyle
+import com.metrolist.shared.settings.ThemeContrastLevel
 import com.metrolist.shared.settings.ThemeMode
+import com.metrolist.shared.settings.ThemePaletteStyle
 import com.metrolist.shared.ui.components.ExpressiveSwitch
 import com.metrolist.shared.ui.components.ReorderMenu
 import com.metrolist.shared.ui.components.focusOutline
@@ -458,12 +470,18 @@ internal fun ThemeSeedColorSetting(
     val presets =
         remember {
             listOf(
+                Color(0xFF5B63F6) to Res.string.theme_color_indigo,
                 Color(0xFF6750A4) to Res.string.theme_color_purple,
+                Color(0xFF1E6CEB) to Res.string.theme_color_blue,
                 Color(0xFF006A6A) to Res.string.theme_color_teal,
+                Color(0xFF00838F) to Res.string.theme_color_cyan,
                 Color(0xFF386A20) to Res.string.theme_color_green,
+                Color(0xFF2E7D32) to Res.string.theme_color_emerald,
+                Color(0xFF765A00) to Res.string.theme_color_gold,
+                Color(0xFFE65100) to Res.string.theme_color_amber,
                 Color(0xFF8C4A60) to Res.string.theme_color_rose,
                 Color(0xFF9C4146) to Res.string.theme_color_red,
-                Color(0xFF765A00) to Res.string.theme_color_gold,
+                Color(0xFF455A64) to Res.string.theme_color_slate,
             )
         }
     Column(
@@ -571,6 +589,251 @@ private fun Color.toHexRgb(): String {
     val greenComponent = (green.coerceIn(0f, 1f) * 255).roundToInt().toString(16).padStart(2, '0')
     val blueComponent = (blue.coerceIn(0f, 1f) * 255).roundToInt().toString(16).padStart(2, '0')
     return "$redComponent$greenComponent$blueComponent".uppercase()
+}
+
+internal enum class AppearancePresetId {
+    EXPRESSIVE_M3,
+    CLASSIC_MATERIAL,
+    SLEEK_MINIMAL,
+    AMOLED_HIGH_CONTRAST,
+    COMPACT_DENSE,
+}
+
+internal fun Settings.matchesAppearancePreset(preset: AppearancePresetId): Boolean =
+    when (preset) {
+        AppearancePresetId.EXPRESSIVE_M3 -> {
+            uiEnhancements &&
+                cornerStyle == CornerStyle.EXPRESSIVE &&
+                surfaceCardStyle == SurfaceCardStyle.EXPRESSIVE &&
+                iconStyle == IconStyle.EXPRESSIVE &&
+                artistArtworkStyle == ArtistArtworkStyle.EXPRESSIVE_POLYGONS &&
+                currentSongHighlightStyle == CurrentSongHighlightStyle.EXPRESSIVE_PILL &&
+                motionStyle == MotionStyle.EXPRESSIVE &&
+                spinningNowPlayingArtwork
+        }
+
+        AppearancePresetId.CLASSIC_MATERIAL -> {
+            cornerStyle == CornerStyle.ROUNDED &&
+                surfaceCardStyle == SurfaceCardStyle.TONAL &&
+                iconStyle == IconStyle.ROUNDED &&
+                artistArtworkStyle == ArtistArtworkStyle.CIRCLE &&
+                currentSongHighlightStyle == CurrentSongHighlightStyle.ROUNDED_CARD &&
+                motionStyle == MotionStyle.STANDARD &&
+                !spinningNowPlayingArtwork
+        }
+
+        AppearancePresetId.SLEEK_MINIMAL -> {
+            cornerStyle == CornerStyle.SHARP &&
+                surfaceCardStyle == SurfaceCardStyle.OUTLINED &&
+                iconStyle == IconStyle.OUTLINED &&
+                artistArtworkStyle == ArtistArtworkStyle.ROUNDED_SQUARE &&
+                currentSongHighlightStyle == CurrentSongHighlightStyle.SUBTLE_TINT &&
+                navLabelVisibility == NavLabelVisibility.SELECTED_ONLY &&
+                !spinningNowPlayingArtwork
+        }
+
+        AppearancePresetId.AMOLED_HIGH_CONTRAST -> {
+            themeMode == ThemeMode.PURE_BLACK &&
+                themeContrastLevel == ThemeContrastLevel.HIGH &&
+                surfaceCardStyle == SurfaceCardStyle.OUTLINED &&
+                currentSongHighlightStyle == CurrentSongHighlightStyle.EXPRESSIVE_PILL
+        }
+
+        AppearancePresetId.COMPACT_DENSE -> {
+            gridItemSize == GridItemSize.SMALL &&
+                densityScaleFactor == DensityScale.SLIGHTLY_COMPACT.value &&
+                navLabelVisibility == NavLabelVisibility.HIDDEN &&
+                cornerStyle == CornerStyle.ROUNDED
+        }
+    }
+
+internal fun Settings.applyAppearancePreset(preset: AppearancePresetId) {
+    when (preset) {
+        AppearancePresetId.EXPRESSIVE_M3 -> {
+            uiEnhancements = true
+            themePaletteStyle = ThemePaletteStyle.EXPRESSIVE
+            themeContrastLevel = ThemeContrastLevel.SYSTEM
+            cornerStyle = CornerStyle.EXPRESSIVE
+            surfaceCardStyle = SurfaceCardStyle.EXPRESSIVE
+            iconStyle = IconStyle.EXPRESSIVE
+            navLabelVisibility = NavLabelVisibility.ALWAYS
+            slimNavBar = false
+            artistArtworkStyle = ArtistArtworkStyle.EXPRESSIVE_POLYGONS
+            currentSongHighlightStyle = CurrentSongHighlightStyle.EXPRESSIVE_PILL
+            motionStyle = MotionStyle.EXPRESSIVE
+            spinningNowPlayingArtwork = true
+            gridItemSize = GridItemSize.BIG
+        }
+
+        AppearancePresetId.CLASSIC_MATERIAL -> {
+            uiEnhancements = true
+            themePaletteStyle = ThemePaletteStyle.TONAL_SPOT
+            themeContrastLevel = ThemeContrastLevel.STANDARD
+            cornerStyle = CornerStyle.ROUNDED
+            surfaceCardStyle = SurfaceCardStyle.TONAL
+            iconStyle = IconStyle.ROUNDED
+            navLabelVisibility = NavLabelVisibility.ALWAYS
+            slimNavBar = false
+            artistArtworkStyle = ArtistArtworkStyle.CIRCLE
+            currentSongHighlightStyle = CurrentSongHighlightStyle.ROUNDED_CARD
+            motionStyle = MotionStyle.STANDARD
+            spinningNowPlayingArtwork = false
+            gridItemSize = GridItemSize.BIG
+        }
+
+        AppearancePresetId.SLEEK_MINIMAL -> {
+            uiEnhancements = true
+            cornerStyle = CornerStyle.SHARP
+            surfaceCardStyle = SurfaceCardStyle.OUTLINED
+            iconStyle = IconStyle.OUTLINED
+            navLabelVisibility = NavLabelVisibility.SELECTED_ONLY
+            slimNavBar = false
+            artistArtworkStyle = ArtistArtworkStyle.ROUNDED_SQUARE
+            currentSongHighlightStyle = CurrentSongHighlightStyle.SUBTLE_TINT
+            motionStyle = MotionStyle.STANDARD
+            spinningNowPlayingArtwork = false
+        }
+
+        AppearancePresetId.AMOLED_HIGH_CONTRAST -> {
+            uiEnhancements = true
+            themeMode = ThemeMode.PURE_BLACK
+            autoPureBlack = true
+            themeContrastLevel = ThemeContrastLevel.HIGH
+            cornerStyle = CornerStyle.EXPRESSIVE
+            surfaceCardStyle = SurfaceCardStyle.OUTLINED
+            iconStyle = IconStyle.FILLED
+            currentSongHighlightStyle = CurrentSongHighlightStyle.EXPRESSIVE_PILL
+            motionStyle = MotionStyle.EXPRESSIVE
+        }
+
+        AppearancePresetId.COMPACT_DENSE -> {
+            uiEnhancements = true
+            cornerStyle = CornerStyle.ROUNDED
+            surfaceCardStyle = SurfaceCardStyle.EXPRESSIVE
+            navLabelVisibility = NavLabelVisibility.HIDDEN
+            slimNavBar = true
+            gridItemSize = GridItemSize.SMALL
+            densityScaleFactor = DensityScale.SLIGHTLY_COMPACT.value
+            currentSongHighlightStyle = CurrentSongHighlightStyle.ROUNDED_CARD
+        }
+    }
+}
+
+@Composable
+internal fun AppearancePresetsSetting(onSettingValueChanged: () -> Unit) {
+    val settings = Settings.shared
+    val haptics = rememberMetrolistHaptics()
+    val presets =
+        listOf(
+            Triple(
+                AppearancePresetId.EXPRESSIVE_M3,
+                stringResource(Res.string.appearance_preset_expressive),
+                stringResource(Res.string.appearance_preset_expressive_desc),
+            ),
+            Triple(
+                AppearancePresetId.CLASSIC_MATERIAL,
+                stringResource(Res.string.appearance_preset_classic),
+                stringResource(Res.string.appearance_preset_classic_desc),
+            ),
+            Triple(
+                AppearancePresetId.SLEEK_MINIMAL,
+                stringResource(Res.string.appearance_preset_minimal),
+                stringResource(Res.string.appearance_preset_minimal_desc),
+            ),
+            Triple(
+                AppearancePresetId.AMOLED_HIGH_CONTRAST,
+                stringResource(Res.string.appearance_preset_amoled),
+                stringResource(Res.string.appearance_preset_amoled_desc),
+            ),
+            Triple(
+                AppearancePresetId.COMPACT_DENSE,
+                stringResource(Res.string.appearance_preset_compact),
+                stringResource(Res.string.appearance_preset_compact_desc),
+            ),
+        )
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Text(stringResource(Res.string.appearance_presets), style = MaterialTheme.typography.titleMedium)
+        Text(
+            stringResource(Res.string.appearance_presets_description),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            presets.forEach { (preset, label, subtitle) ->
+                val active = settings.matchesAppearancePreset(preset)
+                Surface(
+                    onClick = {
+                        haptics.perform(HapticEvent.PRESS)
+                        settings.applyAppearancePreset(preset)
+                        onSettingValueChanged()
+                    },
+                    shape = MaterialTheme.shapes.medium,
+                    color =
+                        if (active) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surfaceContainerHighest
+                        },
+                    border =
+                        BorderStroke(
+                            width = if (active) 1.5.dp else 1.dp,
+                            color =
+                                if (active) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                                },
+                        ),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            if (active) {
+                                Icon(
+                                    imageVector = MetrolistIcons.Filled.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(16.dp),
+                                )
+                            }
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = if (active) FontWeight.SemiBold else FontWeight.Medium,
+                                color =
+                                    if (active) {
+                                        MaterialTheme.colorScheme.onPrimaryContainer
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurface
+                                    },
+                            )
+                        }
+                        Text(
+                            text = subtitle,
+                            style = MaterialTheme.typography.labelSmall,
+                            color =
+                                if (active) {
+                                    MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                },
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

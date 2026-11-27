@@ -19,6 +19,7 @@ import com.metrolist.shared.settings.KeepScreenOnMode
 import com.metrolist.shared.settings.LoudnessLevel
 import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import com.metrolist.shared.utils.formatPlaybackPitch
 import com.metrolist.shared.utils.formatPlaybackSpeed
 import com.metrolist.shared.utils.playbackPitchToSemitones
@@ -54,7 +55,13 @@ internal fun SettingsUiRegistryBuilder.registerPlaybackSettings(host: SharedSett
         id = SettingsPageId.PLAYER,
         title = stringResource(Res.string.player_settings_title),
         subtitle = stringResource(Res.string.settings_player_audio_description),
-        icon = MetrolistIcons.Outlined.PlayArrow,
+        icon =
+            styledIcon(
+                settings.iconStyle,
+                MetrolistIcons.Outlined.PlayArrow,
+                MetrolistIcons.Filled.PlayArrow,
+                MetrolistIcons.Rounded.PlayArrow,
+            ),
         tone = SettingsTone.ROSE,
     ) {
         if (host.platform != SettingsPlatform.IOS) {

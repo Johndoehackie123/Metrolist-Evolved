@@ -5695,4 +5695,101 @@
     <string name="wrapped_home_title">Your %1$s Wrapped is here</string>
     <string name="wrapped_home_body">See your year in music and share it.</string>
     <string name="wrapped_home_card_dismissed">You can find your %1$s Wrapped in Statistics until December 31.</string>
+
+    <!-- Metrolist Evolved Updater & Material 3 Expressive Appearance -->
+    <string name="updates_signature_conflict">This update was signed with a different key than the installed app. Tap Install anyway to try installing, or uninstall and install the latest APK from GitHub.</string>
+    <string name="updates_open_installer">Open Android installer</string>
+    <string name="crash_updates_signature_conflict" translatable="false">This update was signed with a different key than the installed app. Tap Install anyway to try installing, or uninstall and install the latest APK from GitHub.</string>
+    <string name="crash_updates_open_installer" translatable="false">Open Android installer</string>
+
+    <string name="appearance_presets">Style presets</string>
+    <string name="appearance_presets_description">Apply a curated Material 3 Expressive look in one tap, then fine-tune any option below</string>
+    <string name="appearance_preset_expressive">Expressive M3</string>
+    <string name="appearance_preset_expressive_desc">Polygons, segmented cards, spring motion</string>
+    <string name="appearance_preset_classic">Classic Material</string>
+    <string name="appearance_preset_classic_desc">Balanced corners, circles, standard motion</string>
+    <string name="appearance_preset_minimal">Sleek Minimal</string>
+    <string name="appearance_preset_minimal_desc">Crisp outlines, sharp corners, clean labels</string>
+    <string name="appearance_preset_amoled">AMOLED Contrast</string>
+    <string name="appearance_preset_amoled_desc">Pure black, high contrast, outlined cards</string>
+    <string name="appearance_preset_compact">Compact Dense</string>
+    <string name="appearance_preset_compact_desc">Denser grids, compact scale, slim nav</string>
+
+    <string name="auto_pure_black">Pure black in dark mode</string>
+    <string name="auto_pure_black_description">Use an AMOLED pure black background whenever the system switches to dark mode</string>
+
+    <string name="theme_color_indigo">Indigo</string>
+    <string name="theme_color_blue">Blue</string>
+    <string name="theme_color_cyan">Cyan</string>
+    <string name="theme_color_emerald">Emerald</string>
+    <string name="theme_color_amber">Amber</string>
+    <string name="theme_color_slate">Slate</string>
+
+    <string name="theme_contrast_level">Color contrast</string>
+    <string name="theme_contrast_level_description">Adjust Material 3 tonal contrast between surfaces, containers, and text</string>
+    <string name="theme_contrast_system">Follow system</string>
+    <string name="theme_contrast_standard">Standard</string>
+    <string name="theme_contrast_medium">Medium</string>
+    <string name="theme_contrast_high">High</string>
+
+    <string name="appearance_shapes_and_cards">Shapes, cards &amp; artwork</string>
+    <string name="corner_style">Corner radius style</string>
+    <string name="corner_style_description">Adjust corner roundness across cards, sheets, menus, and thumbnails</string>
+    <string name="corner_style_expressive">Expressive</string>
+    <string name="corner_style_rounded">Rounded</string>
+    <string name="corner_style_sharp">Sharp</string>
+    <string name="corner_style_pill">Extra rounded</string>
+
+    <string name="surface_card_style">Card &amp; list surface style</string>
+    <string name="surface_card_style_description">Choose how settings groups, info cards, and song lists are framed</string>
+    <string name="card_style_expressive">Expressive segmented</string>
+    <string name="card_style_tonal">Tonal cards</string>
+    <string name="card_style_outlined">Outlined</string>
+    <string name="card_style_elevated">Elevated</string>
+    <string name="card_style_flat">Minimal flat</string>
+
+    <string name="artist_artwork_style">Artist &amp; avatar shape</string>
+    <string name="artist_artwork_style_description">Choose Material 3 Expressive polygons, classic circles, squircles, or teardrops</string>
+    <string name="artist_shape_polygons">Expressive polygons</string>
+    <string name="artist_shape_circle">Classic circle</string>
+    <string name="artist_shape_rounded_square">Rounded square</string>
+    <string name="artist_shape_teardrop">Teardrop</string>
+
+    <string name="current_song_highlight_style">Active song highlight</string>
+    <string name="current_song_highlight_style_description">Choose how the currently playing track stands out in lists and queues</string>
+    <string name="current_song_style_pill">Expressive pill</string>
+    <string name="current_song_style_card">Rounded card</string>
+    <string name="current_song_style_subtle">Subtle tint</string>
+
+    <string name="spinning_now_playing_artwork">Animated cookie artwork on active song</string>
+    <string name="spinning_now_playing_artwork_description">Morph and gently rotate the active song thumbnail into a 9-sided Material cookie</string>
+
+    <string name="grid_item_size">Album &amp; shelf tile size</string>
+    <string name="grid_item_size_description">Adjust the size of album, playlist, and speed-dial tiles on Home and Library</string>
+    <string name="grid_item_size_large">Standard</string>
+    <string name="grid_item_size_compact">Compact</string>
+
+    <string name="appearance_motion_and_icons">Icons &amp; motion</string>
+    <string name="icon_style">Icon style</string>
+    <string name="icon_style_description">Switch between dynamic active-fill icons, rounded glyphs, crisp outlines, or solid fills</string>
+    <string name="icon_style_expressive">Expressive (filled when active)</string>
+    <string name="icon_style_rounded">Rounded</string>
+    <string name="icon_style_outlined">Outlined</string>
+    <string name="icon_style_filled">Filled</string>
+
+    <string name="motion_style">Animation &amp; spring physics</string>
+    <string name="motion_style_description">Control Material 3 Expressive spatial springs, color transitions, and page animations</string>
+    <string name="motion_style_expressive">Expressive springs</string>
+    <string name="motion_style_standard">Standard smooth</string>
+    <string name="motion_style_reduced">Reduced motion</string>
+
+    <string name="nav_label_visibility">Navigation bar labels</string>
+    <string name="nav_label_visibility_description">Show tab labels always, only for the active tab, or hide them for a compact bar</string>
+    <string name="nav_labels_always">Always show</string>
+    <string name="nav_labels_selected">Active tab only</string>
+    <string name="nav_labels_hidden">Hide labels</string>
+
+    <string name="reset_appearance_title">Reset appearance to defaults</string>
+    <string name="reset_appearance_description">Restore default Material 3 Expressive colors, shapes, cards, icons, and motion</string>
+    <string name="reset_appearance_confirm">Reset all theme, shape, card, icon, and motion customizations back to Metrolist Evolved defaults?</string>
 </resources>

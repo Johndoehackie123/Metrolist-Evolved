@@ -28,7 +28,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
+import com.metrolist.shared.settings.ArtistArtworkStyle
+import com.metrolist.shared.settings.CornerStyle
 import com.metrolist.shared.settings.Settings
+import com.metrolist.shared.settings.SurfaceCardStyle
+import com.metrolist.shared.ui.theme.cornerScaledDp
 
 fun CornerBasedShape.top(): CornerBasedShape = copy(bottomStart = CornerSize(0.dp), bottomEnd = CornerSize(0.dp))
 
@@ -40,9 +44,16 @@ fun segmentedGroupShape(
     outer: Dp = 20.dp,
     inner: Dp = 5.dp,
 ): Shape {
+    val scaledOuter = cornerScaledDp(12.dp, outer, rounded = (outer * 0.75f).coerceAtLeast(12.dp), sharp = 6.dp, pill = 28.dp)
+    val scaledInner =
+        when {
+            Settings.shared.surfaceCardStyle != SurfaceCardStyle.EXPRESSIVE -> scaledOuter
+            Settings.shared.cornerStyle == CornerStyle.SHARP -> 3.dp
+            else -> inner
+        }
     val spec = MaterialTheme.motionScheme.fastSpatialSpec<Dp>()
-    val top by animateDpAsState(if (isFirst || pressed) outer else inner, spec, label = "segmentTop")
-    val bottom by animateDpAsState(if (isLast || pressed) outer else inner, spec, label = "segmentBottom")
+    val top by animateDpAsState(if (isFirst || pressed) scaledOuter else scaledInner, spec, label = "segmentTop")
+    val bottom by animateDpAsState(if (isLast || pressed) scaledOuter else scaledInner, spec, label = "segmentBottom")
     return RoundedCornerShape(topStart = top, topEnd = top, bottomStart = bottom, bottomEnd = bottom)
 }
 
@@ -64,12 +75,35 @@ private val artistArtworkPolygons =
 @Composable
 fun artistArtworkShape(seed: String): Shape {
     if (!Settings.shared.uiEnhancements) return CircleShape
-    val hash = seed.hashCode() and Int.MAX_VALUE
-    val startAngle = ((hash / artistArtworkPolygons.size) % 8) * 45
-    val polygon = artistArtworkPolygons[hash % artistArtworkPolygons.size]
-    val sourcePath = polygon.toPath(startAngle = startAngle)
-    return remember(polygon, startAngle) {
-        FittedPolygonShape(Path().apply { addPath(sourcePath) })
+    return when (Settings.shared.artistArtworkStyle) {
+        ArtistArtworkStyle.CIRCLE -> {
+            CircleShape
+        }
+
+        ArtistArtworkStyle.ROUNDED_SQUARE -> {
+            RoundedCornerShape(
+                cornerScaledDp(12.dp, 22.dp, rounded = 16.dp, sharp = 6.dp, pill = 28.dp),
+            )
+        }
+
+        ArtistArtworkStyle.TEARDROP -> {
+            RoundedCornerShape(
+                topStartPercent = 50,
+                topEndPercent = 50,
+                bottomStartPercent = 50,
+                bottomEndPercent = 14,
+            )
+        }
+
+        ArtistArtworkStyle.EXPRESSIVE_POLYGONS -> {
+            val hash = seed.hashCode() and Int.MAX_VALUE
+            val startAngle = ((hash / artistArtworkPolygons.size) % 8) * 45
+            val polygon = artistArtworkPolygons[hash % artistArtworkPolygons.size]
+            val sourcePath = polygon.toPath(startAngle = startAngle)
+            remember(polygon, startAngle) {
+                FittedPolygonShape(Path().apply { addPath(sourcePath) })
+            }
+        }
     }
 }
 

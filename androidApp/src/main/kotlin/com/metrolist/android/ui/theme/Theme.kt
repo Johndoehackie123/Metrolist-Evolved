@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
-import androidx.compose.material3.MotionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -37,16 +36,18 @@ import androidx.core.view.WindowCompat
 import com.metrolist.android.extensions.findActivity
 import com.metrolist.android.utils.isAndroidTv
 import com.metrolist.shared.settings.Settings
+import com.metrolist.shared.settings.ThemeContrastLevel
 import com.metrolist.shared.settings.ThemePaletteStyle
 import com.metrolist.shared.ui.LocalIsTv
 import com.metrolist.shared.ui.components.FocusOutlineProvider
 import com.metrolist.shared.ui.haptics.MetrolistHapticsProvider
 import com.metrolist.shared.ui.theme.DefaultThemeColor
-import com.metrolist.shared.ui.theme.MetrolistShapes
 import com.metrolist.shared.ui.theme.ThemeColorExtractor
 import com.metrolist.shared.ui.theme.animateColorScheme
 import com.metrolist.shared.ui.theme.orIfIllegible
 import com.metrolist.shared.ui.theme.pureBlack
+import com.metrolist.shared.ui.theme.rememberMetrolistMotionScheme
+import com.metrolist.shared.ui.theme.rememberMetrolistShapes
 import com.metrolist.shared.ui.theme.themeColorScheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -77,15 +78,17 @@ fun MetrolistTheme(
 
     val useSystemDynamicColor = dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-    val contrast = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) rememberSystemContrast(context) else 0f
+    val systemContrast = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) rememberSystemContrast(context) else 0f
+    val contrastPreference = Settings.shared.themeContrastLevel
+    val contrast = contrastPreference.contrastOverride ?: systemContrast.toDouble()
 
     val baseColorScheme =
         if (useSystemDynamicColor) {
             val configuration = LocalConfiguration.current
             val wallpaperSeed = colorResource(android.R.color.system_accent1_500)
-            remember(context, configuration, darkTheme, contrast, paletteStyle, wallpaperSeed) {
-                val generated = { themeColorScheme(wallpaperSeed, darkTheme, paletteStyle, contrast.toDouble()) }
-                if (paletteStyle == ThemePaletteStyle.TONAL_SPOT) {
+            remember(context, configuration, darkTheme, contrast, contrastPreference, paletteStyle, wallpaperSeed) {
+                val generated = { themeColorScheme(wallpaperSeed, darkTheme, paletteStyle, contrast) }
+                if (paletteStyle == ThemePaletteStyle.TONAL_SPOT && contrastPreference == ThemeContrastLevel.SYSTEM) {
                     systemDynamicColorScheme(context, darkTheme).orIfIllegible(darkTheme) {
                         Timber.w("System dynamic colors are illegible on %s; generating from the wallpaper seed", Build.MANUFACTURER)
                         generated()
@@ -96,7 +99,7 @@ fun MetrolistTheme(
             }
         } else {
             val generateScheme = {
-                themeColorScheme(themeColor, darkTheme, paletteStyle, contrast.toDouble())
+                themeColorScheme(themeColor, darkTheme, paletteStyle, contrast)
             }
             key(darkTheme, contrast) {
                 val initial = remember { (themeColor to paletteStyle) to generateScheme() }
@@ -125,7 +128,7 @@ fun MetrolistTheme(
             }
         }
 
-    val motionScheme = remember { MotionScheme.expressive() }
+    val motionScheme = rememberMetrolistMotionScheme()
     val animatedColorScheme = animateColorScheme(colorScheme, motionScheme)
     val background = colorScheme.surface.toArgb()
     DisposableEffect(context, background) {
@@ -136,7 +139,7 @@ fun MetrolistTheme(
     MaterialExpressiveTheme(
         colorScheme = animatedColorScheme,
         typography = getAppTypography(),
-        shapes = MetrolistShapes,
+        shapes = rememberMetrolistShapes(),
         motionScheme = motionScheme,
     ) {
         CompositionLocalProvider(LocalIsTv provides isTv) {

@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.metrolist.android.BuildConfig
 import com.metrolist.android.MainActivity
 import com.metrolist.android.R
@@ -119,7 +120,7 @@ sealed interface AppUpdateState {
     ) : AppUpdateState
 }
 
-enum class UpdateFailure { CHECK, NO_APK, DOWNLOAD, DIGEST, INSTALL }
+enum class UpdateFailure { CHECK, NO_APK, DOWNLOAD, DIGEST, SIGNATURE_CONFLICT, INSTALL }
 
 object AppUpdateManager {
     const val CHANNEL_ID = "updates"
@@ -368,7 +369,7 @@ object AppUpdateManager {
                 // Android's installer still rejects an update signed by a different key.
                 if (!skipVerification && !verifyApkIdentity(context, output)) {
                     output.delete()
-                    mutableState.value = AppUpdateState.Error(UpdateFailure.DIGEST, release)
+                    mutableState.value = AppUpdateState.Error(UpdateFailure.SIGNATURE_CONFLICT, release)
                     return@runCatching
                 }
                 if (!crashRecovery) Settings.shared.pendingUpdateReleaseJson = json.encodeToString(release)
@@ -517,12 +518,17 @@ object AppUpdateManager {
                         }
                     }
                     val receiver = if (crashRecovery) CrashUpdateInstallReceiver::class.java else UpdateInstallReceiver::class.java
-                    // FLAG_MUTABLE: the installer fills in the status extras.
+                    // Android 14+ (targetSdk >= 34) requires explicit Intent with an action for FLAG_MUTABLE PendingIntents.
+                    val callbackIntent =
+                        Intent(context, receiver).apply {
+                            action = "${context.packageName}.action.UPDATE_INSTALL_STATUS"
+                            setPackage(context.packageName)
+                        }
                     val callback =
                         PendingIntent.getBroadcast(
                             context,
                             sessionId,
-                            Intent(context, receiver),
+                            callbackIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE,
                         )
                     session.commit(callback.intentSender)
@@ -531,16 +537,48 @@ object AppUpdateManager {
                 if (sessionId >= 0) {
                     runCatching { installer.abandonSession(sessionId) }
                 }
+                if (downloaded.file.isFile && launchSystemPackageInstaller(context, downloaded.file)) {
+                    mutableState.value = downloaded.copy(installing = false)
+                    return@withContext true
+                }
                 mutableState.value =
                     if (downloaded.file.isFile) downloaded.copy(installing = false) else AppUpdateState.Available(downloaded.release)
             }.isSuccess
         }
 
-    internal fun onInstallFinished(success: Boolean) {
+    fun launchSystemPackageInstaller(
+        context: Context,
+        apkFile: File,
+    ): Boolean =
+        runCatching {
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.FileProvider", apkFile)
+            val intent =
+                Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(uri, "application/vnd.android.package-archive")
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            context.startActivity(intent)
+        }.isSuccess
+
+    fun cachedApkFile(
+        context: Context,
+        release: GitHubRelease,
+    ): File? =
+        File(File(context.cacheDir, "updates"), "Metrolist-${release.version}.apk")
+            .takeIf { it.isFile && it.length() > 0L }
+
+    internal fun onInstallFinished(
+        success: Boolean,
+        conflict: Boolean = false,
+    ) {
         val current = mutableState.value as? AppUpdateState.Downloaded ?: return
         if (!success) stopAutoInstallAfterFailure(current.release)
         mutableState.value =
-            if (success) current.copy(installing = false) else AppUpdateState.Error(UpdateFailure.INSTALL, current.release)
+            when {
+                success -> current.copy(installing = false)
+                conflict -> AppUpdateState.Error(UpdateFailure.SIGNATURE_CONFLICT, current.release)
+                else -> AppUpdateState.Error(UpdateFailure.INSTALL, current.release)
+            }
     }
 
     internal fun onInstallAborted() {

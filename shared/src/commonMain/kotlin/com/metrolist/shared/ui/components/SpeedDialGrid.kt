@@ -119,7 +119,7 @@ import com.metrolist.shared.ui.menu.onSecondaryClick
 import com.metrolist.shared.ui.navigation.LocalRootContentActive
 import com.metrolist.shared.ui.navigation.navigationPopupSource
 import com.metrolist.shared.ui.playback.LocalPlaybackController
-import com.metrolist.shared.ui.theme.uiEnhanced
+import com.metrolist.shared.ui.theme.cornerScaledDp
 import com.metrolist.shared.ui.utils.artistArtworkShape
 import com.metrolist.shared.ui.utils.carouselScroll
 import com.metrolist.shared.utils.isDesktop
@@ -391,7 +391,7 @@ fun SpeedDialGridItem(
     rollHighlight: Float = 0f,
 ) {
     val displayItem = if (item is PlaylistItem) localizedBuiltinPlaylist(item) else item
-    val shape = RoundedCornerShape(uiEnhanced(ThumbnailCornerRadius, 12.dp))
+    val shape = RoundedCornerShape(cornerScaledDp(ThumbnailCornerRadius, 12.dp, rounded = 9.dp, sharp = 4.dp, pill = 20.dp))
     val artworkShape =
         when (item) {
             is ArtistItem -> artistArtworkShape(item.id)

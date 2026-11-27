@@ -82,11 +82,15 @@ import com.metrolist.shared.generated.resources.menu_history
 import com.metrolist.shared.generated.resources.settings
 import com.metrolist.shared.generated.resources.statistics
 import com.metrolist.shared.generated.resources.switch_youtube_channel
+import com.metrolist.shared.settings.ArtistArtworkStyle
+import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.components.AlertDialog
 import com.metrolist.shared.ui.components.images.AsyncImage
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import com.metrolist.shared.ui.navigation.navigationPopupSource
 import com.metrolist.shared.ui.settings.SettingsNavigationRow
+import com.metrolist.shared.ui.theme.cornerScaledDp
 import com.metrolist.shared.ui.utils.segmentedGroupShape
 import com.metrolist.shared.ui.utils.toPolygonShape
 import com.metrolist.shared.ui.utils.verticalScrollWithDrag
@@ -235,6 +239,7 @@ internal fun AccountMenuContent(
     afterMenuContent: (@Composable ColumnScope.((() -> Unit) -> Unit) -> Unit)? = null,
 ) {
     val colorScheme = MaterialTheme.colorScheme
+    val iconStyle = Settings.shared.iconStyle
     var showLogoutDialog by remember { mutableStateOf(false) }
     val showHistory = onNavigateToHistory != null
     val statisticsVisible = showStatistics && onNavigateToStatistics != null
@@ -278,7 +283,12 @@ internal fun AccountMenuContent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    MetrolistIcons.Outlined.Token,
+                    styledIcon(
+                        style = iconStyle,
+                        outlined = MetrolistIcons.Outlined.Token,
+                        filled = MetrolistIcons.Filled.Token,
+                        rounded = MetrolistIcons.Rounded.Token,
+                    ),
                     contentDescription = null,
                     tint = colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp),
@@ -298,7 +308,13 @@ internal fun AccountMenuContent(
                 if (showHistory) {
                     SettingsNavigationRow(
                         title = stringResource(Res.string.menu_history),
-                        icon = MetrolistIcons.Filled.MusicHistory,
+                        icon =
+                            styledIcon(
+                                style = iconStyle,
+                                outlined = MetrolistIcons.Outlined.MusicHistory,
+                                filled = MetrolistIcons.Filled.MusicHistory,
+                                rounded = MetrolistIcons.Rounded.MusicHistory,
+                            ),
                         iconSize = 28.dp,
                         iconTint = colorScheme.primary,
                         trailingContent = null,
@@ -313,7 +329,13 @@ internal fun AccountMenuContent(
                 if (statisticsVisible) {
                     SettingsNavigationRow(
                         title = stringResource(Res.string.statistics),
-                        icon = MetrolistIcons.Filled.SsidChart,
+                        icon =
+                            styledIcon(
+                                style = iconStyle,
+                                outlined = MetrolistIcons.Outlined.SsidChart,
+                                filled = MetrolistIcons.Filled.SsidChart,
+                                rounded = MetrolistIcons.Rounded.SsidChart,
+                            ),
                         iconSize = 28.dp,
                         iconTint = colorScheme.primary,
                         trailingContent = null,
@@ -332,7 +354,13 @@ internal fun AccountMenuContent(
             if (showIntegrations) {
                 SettingsNavigationRow(
                     title = stringResource(Res.string.integrations),
-                    icon = MetrolistIcons.Outlined.Api,
+                    icon =
+                        styledIcon(
+                            style = iconStyle,
+                            outlined = MetrolistIcons.Outlined.Api,
+                            filled = MetrolistIcons.Filled.Api,
+                            rounded = MetrolistIcons.Rounded.Api,
+                        ),
                     iconSize = 28.dp,
                     iconTint = colorScheme.primary,
                     trailingContent = null,
@@ -346,7 +374,13 @@ internal fun AccountMenuContent(
             }
             SettingsNavigationRow(
                 title = stringResource(Res.string.settings),
-                icon = MetrolistIcons.Outlined.Settings,
+                icon =
+                    styledIcon(
+                        style = iconStyle,
+                        outlined = MetrolistIcons.Outlined.Settings,
+                        filled = MetrolistIcons.Filled.Settings,
+                        rounded = MetrolistIcons.Rounded.Settings,
+                    ),
                 iconSize = 28.dp,
                 iconTint = colorScheme.primary,
                 trailingContent = null,
@@ -463,7 +497,20 @@ private fun AccountMenuHero(
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val heroShape = segmentedGroupShape(isFirst = true, isLast = false, pressed = false)
-    val avatarShape = MaterialShapes.Cookie9Sided.toPolygonShape()
+    val avatarShape =
+        when {
+            !Settings.shared.uiEnhancements || Settings.shared.artistArtworkStyle == ArtistArtworkStyle.CIRCLE -> {
+                CircleShape
+            }
+
+            Settings.shared.artistArtworkStyle == ArtistArtworkStyle.ROUNDED_SQUARE -> {
+                RoundedCornerShape(cornerScaledDp(12.dp, 20.dp, rounded = 16.dp, sharp = 6.dp, pill = 26.dp))
+            }
+
+            else -> {
+                MaterialShapes.Cookie9Sided.toPolygonShape()
+            }
+        }
     val reveal = remember { Animatable(0f) }
     val spatial = MaterialTheme.motionScheme.slowSpatialSpec<Float>()
     LaunchedEffect(Unit) { reveal.animateTo(1f, spatial) }

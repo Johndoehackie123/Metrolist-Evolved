@@ -8,7 +8,6 @@ package com.metrolist.desktop.ui.theme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -95,7 +94,7 @@ fun MetrolistTheme(
             colorScheme = MaterialTheme.colorScheme,
             shapes = MaterialTheme.shapes,
             typography = AppTypography(),
-            motionScheme = MotionScheme.expressive(),
+            motionScheme = MaterialTheme.motionScheme,
             content = content,
         )
     }

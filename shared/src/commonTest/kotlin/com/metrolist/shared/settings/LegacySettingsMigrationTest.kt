@@ -746,6 +746,53 @@ class LegacySettingsMigrationTest {
         assertFalse(backing.hasKey("proxyUsername"))
         assertFalse(backing.hasKey("proxyPassword"))
     }
+
+    @Test
+    fun slimNavBarMigratesToHiddenNavLabelVisibility() {
+        val backing = StrictTypedSettings(MapSettings("slimNavBar" to true))
+        val settings = Settings(backing)
+        assertEquals(NavLabelVisibility.HIDDEN, settings.navLabelVisibility)
+        assertTrue(settings.slimNavBar)
+    }
+
+    @Test
+    fun appearanceCustomizationsRoundTripAndResetCleanly() {
+        val settings = Settings(StrictTypedSettings(MapSettings()))
+        settings.themeContrastLevel = ThemeContrastLevel.HIGH
+        settings.cornerStyle = CornerStyle.SHARP
+        settings.surfaceCardStyle = SurfaceCardStyle.OUTLINED
+        settings.iconStyle = IconStyle.ROUNDED
+        settings.navLabelVisibility = NavLabelVisibility.SELECTED_ONLY
+        settings.artistArtworkStyle = ArtistArtworkStyle.TEARDROP
+        settings.currentSongHighlightStyle = CurrentSongHighlightStyle.SUBTLE_TINT
+        settings.motionStyle = MotionStyle.REDUCED
+        settings.spinningNowPlayingArtwork = false
+
+        val exported = settings.exportBackupSettings()
+        val restored = Settings(StrictTypedSettings(MapSettings()))
+        restored.importBackupSettings(exported)
+
+        assertEquals(ThemeContrastLevel.HIGH, restored.themeContrastLevel)
+        assertEquals(CornerStyle.SHARP, restored.cornerStyle)
+        assertEquals(SurfaceCardStyle.OUTLINED, restored.surfaceCardStyle)
+        assertEquals(IconStyle.ROUNDED, restored.iconStyle)
+        assertEquals(NavLabelVisibility.SELECTED_ONLY, restored.navLabelVisibility)
+        assertEquals(ArtistArtworkStyle.TEARDROP, restored.artistArtworkStyle)
+        assertEquals(CurrentSongHighlightStyle.SUBTLE_TINT, restored.currentSongHighlightStyle)
+        assertEquals(MotionStyle.REDUCED, restored.motionStyle)
+        assertFalse(restored.spinningNowPlayingArtwork)
+
+        restored.resetAppearanceSettings()
+        assertEquals(ThemeContrastLevel.SYSTEM, restored.themeContrastLevel)
+        assertEquals(CornerStyle.EXPRESSIVE, restored.cornerStyle)
+        assertEquals(SurfaceCardStyle.EXPRESSIVE, restored.surfaceCardStyle)
+        assertEquals(IconStyle.EXPRESSIVE, restored.iconStyle)
+        assertEquals(NavLabelVisibility.ALWAYS, restored.navLabelVisibility)
+        assertEquals(ArtistArtworkStyle.EXPRESSIVE_POLYGONS, restored.artistArtworkStyle)
+        assertEquals(CurrentSongHighlightStyle.EXPRESSIVE_PILL, restored.currentSongHighlightStyle)
+        assertEquals(MotionStyle.EXPRESSIVE, restored.motionStyle)
+        assertTrue(restored.spinningNowPlayingArtwork)
+    }
 }
 
 private class StrictTypedSettings(

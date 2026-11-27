@@ -106,6 +106,7 @@ import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.settings.defaultOpenTabRoot
 import com.metrolist.shared.settings.desktopDefaultOpenTab
 import com.metrolist.shared.ui.icons.MetrolistIcons
+import com.metrolist.shared.ui.icons.styledIcon
 import com.metrolist.shared.ui.navigation.AdaptiveFormFactor
 import com.metrolist.shared.ui.navigation.AdaptiveLayout
 import com.metrolist.shared.ui.navigation.AdaptiveNavigationItem
@@ -162,15 +163,37 @@ private fun refreshActionFor(route: Screen): (() -> Unit)? =
         }
     }
 
-private fun navIcons(navId: String): Pair<ImageVector, ImageVector> =
-    when (navId) {
-        NavigationId.HOME -> MetrolistIcons.Outlined.Home to MetrolistIcons.Default.Home
-        NavigationId.LIBRARY -> MetrolistIcons.Outlined.LibraryMusic to MetrolistIcons.Default.LibraryMusic
-        NavigationId.HISTORY -> MetrolistIcons.Outlined.MusicHistory to MetrolistIcons.Filled.MusicHistory
-        NavigationId.STATISTICS -> MetrolistIcons.Outlined.SsidChart to MetrolistIcons.Filled.SsidChart
-        NavigationId.LISTEN_TOGETHER -> MetrolistIcons.Outlined.Group to MetrolistIcons.Filled.Groups
-        else -> MetrolistIcons.Default.QuestionMark to MetrolistIcons.Default.QuestionMark
-    }
+private fun navIcons(navId: String): Pair<ImageVector, ImageVector> {
+    val style = Settings.shared.iconStyle
+    val (outlined, filled, rounded) =
+        when (navId) {
+            NavigationId.HOME -> {
+                Triple(MetrolistIcons.Outlined.Home, MetrolistIcons.Default.Home, MetrolistIcons.Rounded.Home)
+            }
+
+            NavigationId.LIBRARY -> {
+                Triple(MetrolistIcons.Outlined.LibraryMusic, MetrolistIcons.Default.LibraryMusic, MetrolistIcons.Rounded.LibraryMusic)
+            }
+
+            NavigationId.HISTORY -> {
+                Triple(MetrolistIcons.Outlined.MusicHistory, MetrolistIcons.Filled.MusicHistory, MetrolistIcons.Rounded.MusicHistory)
+            }
+
+            NavigationId.STATISTICS -> {
+                Triple(MetrolistIcons.Outlined.SsidChart, MetrolistIcons.Filled.SsidChart, MetrolistIcons.Rounded.SsidChart)
+            }
+
+            NavigationId.LISTEN_TOGETHER -> {
+                Triple(MetrolistIcons.Outlined.Group, MetrolistIcons.Filled.Groups, MetrolistIcons.Rounded.Group)
+            }
+
+            else -> {
+                Triple(MetrolistIcons.Default.QuestionMark, MetrolistIcons.Default.QuestionMark, MetrolistIcons.Rounded.QuestionMark)
+            }
+        }
+    return styledIcon(style, outlined, filled, rounded, selected = false) to
+        styledIcon(style, outlined, filled, rounded, selected = true)
+}
 
 internal fun reorderSidebarNavItems(
     items: List<NavItem>,

@@ -95,6 +95,8 @@ import com.metrolist.shared.constants.WideNavigationRailExpandedWidth
 import com.metrolist.shared.generated.resources.Res
 import com.metrolist.shared.generated.resources.drag_to_reorder_x
 import com.metrolist.shared.generated.resources.expand_sidebar
+import com.metrolist.shared.settings.NavLabelVisibility
+import com.metrolist.shared.settings.Settings
 import com.metrolist.shared.ui.haptics.HapticEvent
 import com.metrolist.shared.ui.haptics.rememberMetrolistHaptics
 import com.metrolist.shared.ui.icons.MetrolistIcons
@@ -308,9 +310,18 @@ fun <T> AdaptiveNavigationScaffold(
     content: @Composable () -> Unit,
 ) {
     val visibleItems = if (isEditing) items else items.filter { it.visible }
+    val labelVisibility = Settings.shared.navLabelVisibility
     val navigationItems: @Composable () -> Unit = {
         visibleItems.forEach { item ->
             val selected = item.key == selectedKey
+            val showLabel =
+                when {
+                    !navigationSuiteType.isNavigationBar -> true
+                    Settings.shared.slimNavBar -> false
+                    labelVisibility == NavLabelVisibility.HIDDEN -> false
+                    labelVisibility == NavLabelVisibility.SELECTED_ONLY -> selected
+                    else -> true
+                }
             NavigationSuiteItem(
                 selected = selected,
                 onClick = { onSelect(item.key) },
@@ -325,11 +336,16 @@ fun <T> AdaptiveNavigationScaffold(
                     ) { isSelected ->
                         Icon(
                             imageVector = if (isSelected) item.selectedIcon else item.icon,
-                            contentDescription = null,
+                            contentDescription = if (showLabel) null else item.label,
                         )
                     }
                 },
-                label = { Text(item.label, fontFamily = MaterialTheme.typography.labelLarge.fontFamily) },
+                label =
+                    if (showLabel) {
+                        { Text(item.label, fontFamily = MaterialTheme.typography.labelLarge.fontFamily) }
+                    } else {
+                        null
+                    },
                 modifier = itemModifier(item.key),
                 navigationSuiteType = navigationSuiteType,
             )

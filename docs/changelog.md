@@ -1,3 +1,13 @@
+---v14.3.0
+# Metrolist Evolved 14.3.0
+Metrolist Evolved 14.3.0 overhauls Material 3 Expressive customization across the entire app and hardens the Android 14–16 in-app APK updater with persistent release signing.
+
+## Highlights
+- **Fixed In-App APK Updater on Android 14–16 (`targetSdk 37`)**: Resolved the `FLAG_MUTABLE` `PendingIntent` explicit-action requirement, added a `FileProvider` system-installer fallback button, improved signature-conflict detection, and configured a persistent Metrolist Evolved release signing key so all future updates install seamlessly over `14.3.0+`
+- **One-Tap Material 3 Expressive Style Presets**: Switch instantly between *Expressive M3*, *Classic Material*, *Sleek Minimal*, *AMOLED Contrast*, and *Compact Dense*
+- **Shapes, Cards & Artwork Customization**: Customize corner radius geometry (*Expressive*, *Rounded*, *Sharp*, *Extra rounded*), card/list surface styles (*Expressive segmented*, *Tonal*, *Outlined*, *Elevated*, *Minimal flat*), artist & avatar shapes (*Expressive polygons*, *Classic circle*, *Rounded square*, *Teardrop*), active song highlight (*Expressive pill*, *Rounded card*, *Subtle tint*), animated 9-sided cookie artwork toggle, and album/shelf tile size
+- **Icons, Contrast, Motion & Navigation**: Customize icon style (*Expressive active-fill*, *Rounded*, *Outlined*, *Filled*), Material 3 color contrast (*Follow system*, *Standard*, *Medium*, *High*), pure-black dark mode in Auto theme, expanded 12-swatch custom seed palette, spring motion physics (*Expressive springs*, *Standard smooth*, *Reduced motion*), navigation bar label visibility (*Always*, *Active tab only*, *Hidden*), and a one-tap **Reset appearance to defaults** action
+
 ---v14.2.0
 # Metrolist Evolved 14.2.0
 Metrolist Evolved 14.2.0 introduces the standalone `com.metrolist.music.evolved` Android package ID so it can be installed alongside standard Metrolist, rebrands the app to Metrolist Evolved, and refreshes the Settings and About screens.
