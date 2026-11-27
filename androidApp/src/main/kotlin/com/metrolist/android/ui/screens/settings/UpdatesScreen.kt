@@ -636,7 +636,10 @@ fun UpdateDetailsScreen(
                 current is AppUpdateState.Error -> {
                     val cachedApk = release?.let { AppUpdateManager.cachedApkFile(context, it) }
                     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
-                        if (cachedApk != null && current.failure == UpdateFailure.INSTALL) {
+                        if (
+                            cachedApk != null &&
+                            (current.failure == UpdateFailure.INSTALL || current.failure == UpdateFailure.SIGNATURE_CONFLICT)
+                        ) {
                             OutlinedButton(
                                 onClick = {
                                     installerError = !AppUpdateManager.launchSystemPackageInstaller(context, cachedApk)

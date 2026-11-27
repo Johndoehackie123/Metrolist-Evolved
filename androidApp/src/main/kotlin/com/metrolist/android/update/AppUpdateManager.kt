@@ -368,7 +368,6 @@ object AppUpdateManager {
                 check(partial.renameTo(output)) { "Could not finalize update" }
                 // Android's installer still rejects an update signed by a different key.
                 if (!skipVerification && !verifyApkIdentity(context, output)) {
-                    output.delete()
                     mutableState.value = AppUpdateState.Error(UpdateFailure.SIGNATURE_CONFLICT, release)
                     return@runCatching
                 }
@@ -551,7 +550,7 @@ object AppUpdateManager {
         apkFile: File,
     ): Boolean =
         runCatching {
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.FileProvider", apkFile)
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", apkFile)
             val intent =
                 Intent(Intent.ACTION_VIEW).apply {
                     setDataAndType(uri, "application/vnd.android.package-archive")
