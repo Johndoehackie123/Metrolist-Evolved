@@ -1,3 +1,11 @@
+---v14.3.1
+# Metrolist Evolved 14.3.1
+Metrolist Evolved 14.3.1 ensures deterministic PKCS#12 v1/v2/v3 APK signing across all release builds and fixes the `FileProvider` system-installer fallback so updates install seamlessly in-place without uninstalling.
+
+## Fixes
+- Embedded persistent PKCS#12 release signing fallback directly in `androidApp/build.gradle.kts` with explicit APK Signature Scheme v1, v2, and v3 enabled (preserving the `14.3.0` signing certificate)
+- Fixed `FileProvider` authority case mismatch (`.fileprovider`) in `AppUpdateManager.launchSystemPackageInstaller` so the system package installer fallback launches reliably on Android 14–16
+
 ---v14.3.0
 # Metrolist Evolved 14.3.0
 Metrolist Evolved 14.3.0 overhauls Material 3 Expressive customization across the entire app and hardens the Android 14–16 in-app APK updater with persistent release signing.

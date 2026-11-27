@@ -216,9 +216,16 @@ jobs:
             fi
           fi
           # gradle.properties caps local builds at 4 workers and 4 GiB; the CI runner has 8 vCPUs.
-          ./gradlew "${tasks[@]}" --no-daemon --max-workers="$(nproc)" \
+          log="$RUNNER_TEMP/gradle-android.log"
+          if ! ./gradlew "${tasks[@]}" --no-daemon --max-workers="$(nproc)" \
             "-Dorg.gradle.jvmargs=-Xmx8g -XX:MaxMetaspaceSize=1g -XX:+UseParallelGC -Dfile.encoding=UTF-8" \
-            "${extra_args[@]}"
+            "${extra_args[@]}" > >(tee "$log") 2> >(tee -a "$log" >&2); then
+            ktlint_details="$(cat androidApp/build/reports/ktlint/*/*.txt shared/build/reports/ktlint/*/*.txt 2>/dev/null | tr '\n' ' ' | head -c 1500 || true)"
+            lint_details="$(grep -E 'Error:.*\[.*\]' androidApp/build/reports/lint-results-debug.txt 2>/dev/null | tr '\n' ' ' | head -c 1000 || true)"
+            err_lines="$(grep -E '^(e: |> Task .* FAILED|FAILURE:|\* What went wrong:|  > |.*Exception|.*FAILED$|Error:)' "$log" | head -c 1800 | tr '\n' ' ' || true)"
+            echo "::error title=Android build failed::ERRORS: ${err_lines} || KTLINT: ${ktlint_details} || LINT: ${lint_details}"
+            exit 1
+          fi
 
       - name: Upload lint report
         if: failure() && inputs.variant == 'debug'

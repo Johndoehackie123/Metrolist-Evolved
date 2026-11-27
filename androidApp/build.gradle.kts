@@ -264,7 +264,7 @@ android {
         applicationId = "com.metrolist.music.evolved"
         minSdk = 24
         targetSdk = 37
-        versionCode = 158
+        versionCode = 159
         versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -275,26 +275,40 @@ android {
         buildConfigField("String", "BUNDLED_LANGUAGE_TAGS", "\"${bundledLanguageTags.joinToString(",")}\"")
     }
 
-    val keystorePath = System.getenv("KEYSTORE_PATH") ?: ""
-    val storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
-    val keyAliasName = System.getenv("KEY_ALIAS") ?: ""
-    val keyPasswordVal = System.getenv("KEY_PASSWORD") ?: ""
+    val fallbackKeystoreFile = rootProject.file(".github/signing/metrolist-evolved-release.p12")
+    val envKeystorePath = System.getenv("KEYSTORE_PATH") ?: ""
+    val envStorePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+    val envKeyAlias = System.getenv("KEY_ALIAS") ?: ""
+    val envKeyPassword = System.getenv("KEY_PASSWORD") ?: ""
 
-    val hasReleaseSigning =
-        keystorePath.isNotBlank() &&
-            storePassword.isNotBlank() &&
-            keyAliasName.isNotBlank() &&
-            keyPasswordVal.isNotBlank()
+    val hasEnvReleaseSigning =
+        envKeystorePath.isNotBlank() &&
+            envStorePassword.isNotBlank() &&
+            envKeyAlias.isNotBlank() &&
+            envKeyPassword.isNotBlank()
+
+    val resolvedKeystoreFile =
+        if (hasEnvReleaseSigning) {
+            File(envKeystorePath)
+        } else {
+            fallbackKeystoreFile
+        }
+    val hasReleaseSigning = hasEnvReleaseSigning || fallbackKeystoreFile.isFile
 
     if (hasReleaseSigning) {
         signingConfigs {
-            create("release")
+            create("release") {
+                storeFile = resolvedKeystoreFile
+                storeType = "PKCS12"
+                storePassword = if (hasEnvReleaseSigning) envStorePassword else "metrolist-evolved-signing"
+                keyAlias = if (hasEnvReleaseSigning) envKeyAlias else "metrolist"
+                keyPassword = if (hasEnvReleaseSigning) envKeyPassword else "metrolist-evolved-signing"
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+                enableV4Signing = false
+            }
         }
-        val releaseConfig = signingConfigs["release"]
-        releaseConfig.storeFile = File(keystorePath)
-        releaseConfig.storePassword = storePassword
-        releaseConfig.keyAlias = keyAliasName
-        releaseConfig.keyPassword = keyPasswordVal
     }
 
     buildTypes {

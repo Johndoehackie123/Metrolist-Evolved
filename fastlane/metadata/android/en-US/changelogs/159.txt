@@ -1,0 +1,1 @@
+Ensure persistent PKCS#12 v1/v2/v3 APK signing across all release builds and fix the FileProvider authority in the system package installer fallback so updates install seamlessly in-place.
